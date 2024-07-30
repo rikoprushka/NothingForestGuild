@@ -28,6 +28,19 @@
         #twitchLink a:hover { text-decoration: underline; }
         .hidden { opacity: 0; pointer-events: none; }
     </style>
+    <script>
+
+        document.addEventListener('keydown', function(event) {
+
+            if (event.key === 'B' || event.key === 'b') {
+
+                window.location.href = 'battle-royale.html';
+
+            }
+
+        });
+
+    </script>
 </head>
 <body>
     <div id="container">
@@ -40,6 +53,7 @@
             <p>Numpad 5: Play Sound</p>
             <p>Click: Toggle Link</p>
             <p>H: Toggle This Menu</p>
+            <p>B: Go to Battle Royale</p>
             <br>
             <h2>Credits</h2>
             <p>All assets are copyrighted by <a href="https://x.com/NothingJioo" target="_blank">@NothingJioo</a></p>
