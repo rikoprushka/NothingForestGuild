@@ -1,0 +1,194 @@
+        const characterUrls = [
+            'pixel/AnimalWillD0.png', //
+            'pixel/ArmyBangtanSonyeondan.png', //
+            'pixel/Arth101s.png', //
+            'pixel/ChocoMeow_Bs.png', //
+            'pixel/ChomPlu_PINK.png', //
+            'pixel/daiyas_diary.png', //
+            'pixel/darkwarkry.png', //
+            'pixel/FadeArtey199x.png', //
+            'pixel/fluffynaff.png', //
+            'pixel/gu_ball.png', //
+            'pixel/ikunoreo.png', //
+            'pixel/jiooooooooooooooooooooooo.png', //
+            'pixel/jornorslife.png', //
+            'pixel/ke1_ng0.png', //
+            'pixel/lasy_onion.png', //
+            'pixel/Laurie_Blisse.png', //
+            'pixel/LKlemonX.png', //
+            'pixel/MaOsS_Korn.png', //
+            'pixel/momotan_sumimo.png', //
+            'pixel/mynameiszip.png', //
+            'pixel/mynameiszip2.png', //
+            'pixel/Nine3D.png', //
+            'pixel/nohss!w.png', //
+            'pixel/PeatCN76.png', //
+            'pixel/ppunchpk_jpeg.png', //
+            'pixel/PuPaDuPP.png', //
+            'pixel/Purgoor.png', //
+            'pixel/RikoPrushka.png', //
+            'pixel/Simoence.png', //
+            'pixel/tiwvy.png', //
+            'pixel/V3ntoRies.png' //
+        ];
+
+
+sound/wakuwaku2.ogg
+
+
+
+        const characters = [
+            { name: "AnimalWillD0", image: "pixel/AnimalWillD0.png" },
+            { name: "ArmyBangtanSonyeondan", image: "pixel/ArmyBangtanSonyeondan.png" },
+            { name: "Arth101s", image: "pixel/Arth101s.png" },
+            { name: "ChocoMeow_Bs", image: "pixel/ChocoMeow_Bs.png" },
+            { name: "ChomPlu_PINK", image: "pixel/ChomPlu_PINK.png" },
+            { name: "daiyas_diary", image: "pixel/daiyas_diary.png" },
+            { name: "darkwarkry", image: "pixel/darkwarkry.png" },
+            { name: "FadeArtey199x", image: "pixel/FadeArtey199x.png" },
+            { name: "fluffynaff", image: "pixel/fluffynaff.png" },
+            { name: "gu_ball", image: "pixel/gu_ball.png" },
+            { name: "ikunoreo", image: "pixel/ikunoreo.png" },
+            { name: "jiooooooooooooooooooooooo", image: "pixel/jiooooooooooooooooooooooo.png" },
+            { name: "jornorslife", image: "pixel/jornorslife.png" },
+            { name: "ke1_ng0", image: "pixel/ke1_ng0.png" },
+            { name: "lasy_onion", image: "pixel/lasy_onion.png" },
+            { name: "Laurie_Blisse", image: "pixel/Laurie_Blisse.png" },
+            { name: "LKlemonX", image: "pixel/LKlemonX.png" },
+            { name: "MaOsS_Korn", image: "pixel/MaOsS_Korn.png" },
+            { name: "momotan_sumimo", image: "pixel/momotan_sumimo.png" },
+            { name: "mynameiszip", image: "pixel/mynameiszip.png" },
+            { name: "mynameiszip2", image: "pixel/mynameiszip2.png" },
+            { name: "Nine3D", image: "pixel/Nine3D.png" },
+            { name: "nohss!w", image: "pixel/nohss!w.png" },
+            { name: "PeatCN76", image: "pixel/PeatCN76.png" },
+            { name: "ppunchpk_jpeg", image: "pixel/ppunchpk_jpeg.png" },
+            { name: "PuPaDuPP", image: "pixel/PuPaDuPP.png" },
+            { name: "Purgoor", image: "pixel/Purgoor.png" },
+            { name: "RikoPrushka", image: "pixel/RikoPrushka.png" },
+            { name: "Simoence", image: "pixel/Simoence.png" },
+            { name: "tiwvy", image: "pixel/tiwvy.png" },
+            { name: "V3ntoRies", image: "pixel/V3ntoRies.png" }
+        ];
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://drive.google.com/file/d/1YJD4iKFEKS2FhdMY_MwyPX7F-7pUQDQa/view?usp=drive_link
+https://drive.google.com/file/d/1cxsB_K2o2_tIldKKF-RHEszKrApH97xk/view?usp=drive_link
+https://drive.google.com/file/d/1IPJBKBDGGSqsxNIO4A6gGwrhvn4Y0rB5/view?usp=drive_link
+https://drive.google.com/file/d/1O8RrseoWdNY63MN8JG8dgpS0ExzOAYGl/view?usp=drive_link
+https://drive.google.com/file/d/1K7mspjU-srJQmh7cfTh58GUtFBmeHcFR/view?usp=drive_link
+https://drive.google.com/file/d/18hLHgXePVXzo5Gqk97K1FWuGvP2PXh2C/view?usp=drive_link
+https://drive.google.com/file/d/1mGps4uUL-e9FY8_kqlCjqqL9n7WtJ2hC/view?usp=drive_link
+https://drive.google.com/file/d/1YgeVkdvY7InOWTRhGF7VKa5kOmscbKOe/view?usp=drive_link
+https://drive.google.com/file/d/10WmZ3K2X0O2ov5j9mAMH0Iew37JozDZP/view?usp=drive_link
+https://drive.google.com/file/d/164GgQxLzPWphmss9K_B0poaHaTZ-BhZu/view?usp=drive_link
+https://drive.google.com/file/d/1mSstjiL2CzwOcVKtMivNTfMBrPxWyt9V/view?usp=drive_link
+https://drive.google.com/file/d/12rAVE4pcOVEvAVN7_usKTuZe65Srx893/view?usp=drive_link
+https://drive.google.com/file/d/1JHbFl3_x6YgLZ3XQFdYKAFKzrXmzU7f2/view?usp=drive_link
+https://drive.google.com/file/d/1zgXmd63ykqVM3HVUgHYobrvYL40yt7O1/view?usp=drive_link
+https://drive.google.com/file/d/1u2D8H_xrmAHnY_GiELGIhYCk10yR86tZ/view?usp=drive_link
+https://drive.google.com/file/d/1Jie9KjiSNabu5dX50EJlX8VdVPklr-xB/view?usp=drive_link
+https://drive.google.com/file/d/1NAW6-6WwEVmtNtEjdV0drEFKZ-p5nZzi/view?usp=drive_link
+https://drive.google.com/file/d/10o7ifn8XidVnFE5ywQAcpS2bUYQ_6MWB/view?usp=drive_link
+https://drive.google.com/file/d/1gDV5apF3VFJ3GkfdGOqoeo35U7gvVoja/view?usp=drive_link
+https://drive.google.com/file/d/1yIC6OVFJMNDcs_qQrBFlT1nsjn8P9rN4/view?usp=drive_link
+https://drive.google.com/file/d/14N_WLMm9cEfvcLL5PnxwjFO-A19IffAI/view?usp=drive_link
+https://drive.google.com/file/d/1Ndc0ht38dDJUUHByegbh8xxscbMDK8r9/view?usp=drive_link
+https://drive.google.com/file/d/1yx9P5Bek25ISwn21QMukGEiROYlrbO-F/view?usp=drive_link
+https://drive.google.com/file/d/1OC9Xx0qbvRk52sMC1-6bJru0GrsYOGmC/view?usp=drive_link
+https://drive.google.com/file/d/17aDNmOPTGci4DudqvCQhvCyxNZbP_lai/view?usp=drive_link
+https://drive.google.com/file/d/1bM_BYlDnl81O1asEIhOtTNRL8di_aBdO/view?usp=drive_link
+https://drive.google.com/file/d/1u5M8iuZovy-oNJi1JY8dzSksULVplsvf/view?usp=drive_link
+https://drive.google.com/file/d/1A_ZOJFCpXb1r37ookbufGgUTxFe34Wty/view?usp=drive_link
+https://drive.google.com/file/d/1fFSO9YMx01G11-08LUNEJy1NOv55zYTx/view?usp=drive_link
+https://drive.google.com/file/d/1q0PVskqNI7-RA-8visBaAyxCuRCsxdYT/view?usp=drive_link
+https://drive.google.com/file/d/1HNd-CtNa3ZqBMBMBllD7Qm-sq4Np0CwX/view?usp=drive_link
+https://drive.google.com/file/d/12bEpzMLmf9j2l_ctFSUK8nraj_1GN61o/view?usp=drive_link
+
+https://drive.google.com/file/d/foo
+https://drive.google.com/uc?id=foo
+
+
+
+            'picasa\output\AnimalWillD0.png', //
+            'picasa\output\ArmyBangtanSonyeondan.png', //
+            'picasa\output\Arth101s.png', //
+            'picasa\output\ChocoMeow_Bs.png', //
+            'picasa\output\ChomPlu_PINK.png', //
+            'picasa\output\daiyas_diary.png', //
+            'picasa\output\daiyas_diarymask.png', //
+            'picasa\output\darkwarkry.png', //
+            'picasa\output\FadeArtey199x.png', //
+            'picasa\output\fluffynaff.png', //
+            'picasa\output\gu_ball.png', //
+            'picasa\output\ikunoreo.png', //
+            'picasa\output\jioo.png', //
+            'picasa\output\jornorslife.png', //
+            'picasa\output\ke1_ng0.png', //
+            'picasa\output\lasy_onion.png', //
+            'picasa\output\Laurie_Blisse.png', //
+            'picasa\output\LKlemonX.png', //
+            'picasa\output\MaOsS_Korn.png', //
+            'picasa\output\momotan_sumimo.png', //
+            'picasa\output\mynameiszip.png', //
+            'picasa\output\mynameiszip2.png', //
+            'picasa\output\Nine3D.png', //
+            'picasa\output\nohss!w.png', //
+            'picasa\output\PeatCN76.png', //
+            'picasa\output\ppunchpk_jpeg.png', //
+            'picasa\output\PuPaDuPP.png', //
+            'picasa\output\Purgoor.png', //
+            'picasa\output\RikoPrushka.png', //
+            'picasa\output\Simoence.png', //
+            'picasa\output\tiwvy.png', //
+            'picasa\output\V3ntoRies.png', //
+
+            'https://via.placeholder.com/200x100?text=Logo1',
+
+
+
+        const characterUrls = [
+            'pixel/AnimalWillD0.png', //
+            'pixel/ArmyBangtanSonyeondan.png', //
+            'pixel/Arth101s.png', //
+            'pixel/ChocoMeow_Bs.png', //
+            'pixel/ChomPlu_PINK.png', //
+            'pixel/daiyas_diary.png', //
+            'pixel/daiyas_diarymask.png', //
+            'pixel/darkwarkry.png', //
+            'pixel/FadeArtey199x.png', //
+            'pixel/fluffynaff.png', //
+            'pixel/gu_ball.png', //
+            'pixel/ikunoreo.png', //
+            'pixel/jioo.png', //
+            'pixel/jornorslife.png', //
+            'pixel/ke1_ng0.png', //
+            'pixel/lasy_onion.png', //
+            'pixel/Laurie_Blisse.png', //
+            'pixel/LKlemonX.png', //
+            'pixel/MaOsS_Korn.png', //
+            'pixel/momotan_sumimo.png', //
+            'pixel/mynameiszip.png', //
+            'pixel/mynameiszip2.png', //
+            'pixel/Nine3D.png', //
+            'pixel/nohss!w.png', //
+            'pixel/PeatCN76.png', //
+            'pixel/ppunchpk_jpeg.png', //
+            'pixel/PuPaDuPP.png', //
+            'pixel/Purgoor.png', //
+            'pixel/RikoPrushka.png', //
+            'pixel/Simoence.png', //
+            'pixel/tiwvy.png', //
+            'pixel/V3ntoRies.png' //
+        ];

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nothing Forest Guild Bouncing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #000; font-family: 'Press Start 2P', cursive; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        #container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+        canvas { display: block; background-color: #000; }
+        #twitchLink, #howToPlay { 
+            position: absolute; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background-color: rgba(0,0,0,0.7); 
+            padding: 10px; 
+            border-radius: 5px; 
+            text-align: center;
+            transition: opacity 0.3s ease;
+            color: #fff;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        #twitchLink { bottom: 20px; }
+        #howToPlay { top: 20px; max-width: 80%; }
+        #twitchLink a { color: #9146FF; text-decoration: none; }
+        #twitchLink a:hover { text-decoration: underline; }
+        .hidden { opacity: 0; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <canvas id="logoCanvas"></canvas>
+        <div id="twitchLink" class="hidden"></div>
+        <div id="howToPlay" class="hidden">
+            <h2>How to Play</h2>
+            <p>↑/↓: Change Speed</p>
+            <p>←/→: Flip Image</p>
+            <p>Numpad 5: Play Sound</p>
+            <p>Click: Toggle Link</p>
+            <p>H: Toggle This Menu</p>
+            <br>
+            <h2>Credits</h2>
+            <p>All assets are copyrighted by <a href="https://x.com/NothingJioo" target="_blank">@NothingJioo</a></p>
+            <p><a href="https://www.twitch.tv/jiooooooooooooooooooooooo" target="_blank">twitch.tv/jiooooooooooooooooooooooo</a></p>
+            <p>Created by Riko Prushka</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        const container = document.getElementById('container');
+        const canvas = document.getElementById('logoCanvas');
+        const ctx = canvas.getContext('2d');
+        const twitchLinkDisplay = document.getElementById('twitchLink');
+        const howToPlayDisplay = document.getElementById('howToPlay');
+        let isLinkVisible = false;
+        let isHowToPlayVisible = false;
+
+        const defaultWidth = 1280;
+        const defaultHeight = 720;
+        const nativeCharacterSize = 200;
+
+        // Add your sound file URL here
+        const soundEffect = new Audio('sound/wakuwaku2.ogg');
+
+        function resizeCanvas() {
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            const scale = Math.min(containerWidth / defaultWidth, containerHeight / defaultHeight);
+            
+            canvas.width = defaultWidth * scale;
+            canvas.height = defaultHeight * scale;
+            
+            logo.width = nativeCharacterSize * scale;
+            logo.height = nativeCharacterSize * scale;
+            logo.x = Math.min(Math.max(logo.x, 0), canvas.width - logo.width);
+            logo.y = Math.min(Math.max(logo.y, 0), canvas.height - logo.height);
+        }
+
+        const characterUrls = [
+            'pixel/AnimalWillD0.png', //
+            'pixel/ArmyBangtanSonyeondan.png', //
+            'pixel/Arth101s.png', //
+            'pixel/ChocoMeow_Bs.png', //
+            'pixel/ChomPlu_PINK.png', //
+            'pixel/daiyas_diary.png', //
+            'pixel/darkwarkry.png', //
+            'pixel/FadeArtey199x.png', //
+            'pixel/fluffynaff.png', //
+            'pixel/gu_ball.png', //
+            'pixel/ikunoreo.png', //
+            'pixel/jiooooooooooooooooooooooo.png', //
+            'pixel/jornorslife.png', //
+            'pixel/ke1_ng0.png', //
+            'pixel/lasy_onion.png', //
+            'pixel/Laurie_Blisse.png', //
+            'pixel/LKlemonX.png', //
+            'pixel/MaOsS_Korn.png', //
+            'pixel/momotan_sumimo.png', //
+            'pixel/mynameiszip.png', //
+            'pixel/mynameiszip2.png', //
+            'pixel/Nine3D.png', //
+            'pixel/nohss!w.png', //
+            'pixel/PeatCN76.png', //
+            'pixel/ppunchpk_jpeg.png', //
+            'pixel/PuPaDuPP.png', //
+            'pixel/Purgoor.png', //
+            'pixel/RikoPrushka.png', //
+            'pixel/Simoence.png', //
+            'pixel/tiwvy.png', //
+            'pixel/V3ntoRies.png' //
+        ];
+
+        const logo = {
+            x: Math.random() * (defaultWidth - nativeCharacterSize),
+            y: Math.random() * (defaultHeight - nativeCharacterSize),
+            width: nativeCharacterSize,
+            height: nativeCharacterSize,
+            dx: 2,
+            dy: 2,
+            speed: 2,
+            color: getRandomColor(),
+            currentImageIndex: 0,
+            flipped: false
+        };
+
+        const characterImages = characterUrls.map(url => {
+            const img = new Image();
+            img.src = url;
+            return img;
+        });
+
+        function getRandomColor() {
+            return `#${Math.floor(Math.random()*16777215).toString(16)}`;
+        }
+
+        function drawLogo() {
+            ctx.save();
+            ctx.fillStyle = logo.color;
+            ctx.fillRect(logo.x, logo.y, logo.width, logo.height);
+            
+            if (logo.flipped) {
+                ctx.translate(logo.x + logo.width, logo.y);
+                ctx.scale(-1, 1);
+                ctx.drawImage(characterImages[logo.currentImageIndex], 0, 0, logo.width, logo.height);
+            } else {
+                ctx.drawImage(characterImages[logo.currentImageIndex], logo.x, logo.y, logo.width, logo.height);
+            }
+            ctx.restore();
+        }
+
+        function moveLogo() {
+            logo.x += logo.dx;
+            logo.y += logo.dy;
+
+            let hitBoundary = false;
+
+            if (logo.x + logo.width > canvas.width || logo.x < 0) {
+                logo.dx = -logo.dx;
+                hitBoundary = true;
+            }
+            if (logo.y + logo.height > canvas.height || logo.y < 0) {
+                logo.dy = -logo.dy;
+                hitBoundary = true;
+            }
+
+            if (hitBoundary) {
+                logo.color = getRandomColor();
+                logo.currentImageIndex = (logo.currentImageIndex + 1) % characterImages.length;
+                updateTwitchLink();
+            }
+        }
+
+        function updateTwitchLink() {
+            const fullFilename = characterUrls[logo.currentImageIndex].split('/').pop().split('?')[0];
+            const filename = fullFilename.split('.').slice(0, -1).join('.');
+            const twitchUrl = `https://www.twitch.tv/${filename}`;
+            twitchLinkDisplay.innerHTML = `<a href="${twitchUrl}" target="_blank">${filename}</a>`;
+        }
+
+        function toggleLinkVisibility() {
+            isLinkVisible = !isLinkVisible;
+            twitchLinkDisplay.classList.toggle('hidden', !isLinkVisible);
+        }
+
+        function toggleHowToPlay() {
+            isHowToPlayVisible = !isHowToPlayVisible;
+            howToPlayDisplay.classList.toggle('hidden', !isHowToPlayVisible);
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawLogo();
+            moveLogo();
+            requestAnimationFrame(animate);
+        }
+
+        document.addEventListener('keydown', (event) => {
+            switch(event.key) {
+                case 'ArrowUp':
+                    logo.speed = Math.min(logo.speed + 0.5, 10);
+                    logo.dx = Math.sign(logo.dx) * logo.speed;
+                    logo.dy = Math.sign(logo.dy) * logo.speed;
+                    break;
+                case 'ArrowDown':
+                    logo.speed = Math.max(logo.speed - 0.5, 0.5);
+                    logo.dx = Math.sign(logo.dx) * logo.speed;
+                    logo.dy = Math.sign(logo.dy) * logo.speed;
+                    break;
+                case 'ArrowLeft':
+                case 'ArrowRight':
+                    logo.flipped = !logo.flipped;
+                    break;
+                case '5':
+                    if (event.location === KeyboardEvent.DOM_KEY_LOCATION_NUMPAD) {
+                        soundEffect.play();
+                    }
+                    break;
+                case 'h':
+                case 'H':
+                    toggleHowToPlay();
+                    break;
+            }
+        });
+
+        Promise.all(characterImages.map(img => new Promise(resolve => img.onload = resolve)))
+            .then(() => {
+                resizeCanvas();
+                updateTwitchLink();
+                animate();
+            });
+
+        window.addEventListener('resize', resizeCanvas);
+        canvas.addEventListener('click', toggleLinkVisibility);
+    </script>
+</body>
+</html>
