@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nothing Forest Guild Battle Royale</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet?v=1.2.3">
     <style>
         body {
             font-family: 'Press Start 2P', cursive;
@@ -15,7 +15,7 @@
             min-height: 100vh;
             margin: 0;
             background-color: #000;
-            color: #fff;
+            color: #F5F5F4;
         }
         #gameWrapper {
             display: flex;
@@ -24,7 +24,7 @@
             background-color: #000;
         }
         #statsContainer {
-            width: 240px;
+            width: 400px;
             height: 720px;
             background-color: #111;
             overflow-y: auto;
@@ -35,12 +35,12 @@
         #gameContainer {
             width: 720px;
             height: 720px;
-            border: 2px solid white;
+            border: 4px ridge #DC2626;
             position: relative;
             overflow: hidden;
         }
         #logContainer {
-            width: 320px;
+            width: 400px;
             height: 720px;
             background-color: #111;
             color: #0f0;
@@ -55,6 +55,7 @@
             width: 60px;
             height: 60px;
             transition: left 0.5s, top 0.5s;
+            cursor: pointer;
         }
         .character img {
             width: 100%;
@@ -73,14 +74,15 @@
         }
         .damage-number {
             position: absolute;
-            top: -20px;
+            top: -30px;
             left: 50%;
             transform: translateX(-50%);
             color: red;
             font-weight: bold;
             opacity: 0;
             transition: top 0.5s, opacity 0.5s;
-            font-size: 8px;
+            font-size: 16px;
+            text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
         }
         .hp-bar {
             position: absolute;
@@ -107,8 +109,9 @@
         .character-name {
             position: absolute;
             top: -25px;
-            left: 0;
-            width: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
             text-align: center;
             font-size: 8px;
             color: white;
@@ -167,6 +170,9 @@
         .character-name-log {
             color: #00FFFF;
         }
+        .player-action {
+            color: yellow;
+        }
         #countdown {
             position: absolute;
             top: 50%;
@@ -192,7 +198,7 @@
         }
         .killed-list {
             font-size: 7px;
-            color: #888;
+            color: #f00;
             margin-top: 5px;
         }
         #fireworks {
@@ -210,27 +216,108 @@
             background-color: #fff;
             border-radius: 50%;
         }
+        @keyframes burn {
+            0% { filter: brightness(1) contrast(1); }
+            50% { filter: brightness(1.5) contrast(1.2) hue-rotate(45deg); }
+            100% { filter: brightness(0.5) contrast(0.8) hue-rotate(90deg); }
+        }
+        .burning {
+            animation: burn 1s ease-in-out infinite alternate;
+        }
+        #controlPanel {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        #controlPanel button {
+            font-size: 12px;
+            padding: 5px 10px;
+        }
+        .item {
+            position: absolute;
+            font-size: 24px;
+            animation: float 2s infinite ease-in-out;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.5); }
+        }
+        .celebrating {
+            animation: celebrate 2s infinite ease-in-out;
+        }
+        .pixel-firework {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: #fff;
+            animation: explode 1s forwards;
+        }
+        @keyframes explode {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(20); opacity: 0; }
+        }
+        #howToPlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            display: none;
+            z-index: 1000;
+            max-width: 80%;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+        #winnerFlood {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 999;
+        }
+        .winner-name {
+            position: absolute;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.3);
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
-    <h1>Pixel Character Battle Royale</h1>
+    <h1>Nothing Forest Guild Battle Royale</h1>
     <div id="gameWrapper">
         <div id="statsContainer"></div>
         <div id="gameContainer">
             <div id="winningMessage"></div>
             <div id="countdown"></div>
             <div id="fireworks"></div>
+            <div id="winnerFlood"></div>
         </div>
         <div id="logContainer"></div>
     </div>
+    <div id="controlPanel">
+        <button onclick="dropHealingItem()">Drop Healing 💚</button>
+        <button onclick="dropBomb()">Drop Bomb 💣</button>
+    </div>
     <div id="gameInfo"></div>
+    <div id="howToPlay"></div>
     <div id="credits">
         <p>All assets are copyrighted by
         <a href="https://x.com/NothingJioo" target="_blank" rel="noopener noreferrer">@NothingJioo</a></p>
         <a href="https://www.twitch.tv/jiooooooooooooooooooooooo" target="_blank" rel="noopener noreferrer">
             twitch.tv/jiooooooooooooooooooooooo
         </a>
-        <p>Created by: Riko Prushka</p>
+        <p>Created by Riko Prushka</p>
     </div>
 
     <script>
@@ -239,8 +326,11 @@
         const CHARACTER_SIZE = 60;
         const ATTACK_RANGE = 100;
         const ATTACK_COOLDOWN = 1000;
-        const MOVEMENT_INTERVAL = 2000;
+        let MOVEMENT_INTERVAL = 2000;
         const INITIAL_HP = 100;
+
+        // Add the celebration sound URL here
+        const CELEBRATION_SOUND_URL = 'sounds/waku.ogg';
 
         const characterUrls = [
             'pixel/AnimalWillD0.png',
@@ -263,7 +353,6 @@
             'pixel/MaOsS_Korn.png',
             'pixel/momotan_sumimo.png',
             'pixel/mynameiszip.png',
-            'pixel/mynameiszip2.png',
             'pixel/Nine3D.png',
             'pixel/nohss!w.png',
             'pixel/PeatCN76.png',
@@ -279,10 +368,11 @@
         let characters = [];
         let gameState = 'idle';
         let winner = null;
+        let moveInterval;
 
-        function getCharacterName(url, maxLength = Infinity) {
+        function getCharacterName(url, maxLength = 12) {
             let name = url.split('/').pop().split('.')[0];
-            return name.length > maxLength ? name.substring(0, maxLength) + '...' : name;
+            return name.length > maxLength ? name.substring(0, maxLength) : name;
         }
 
         function createCharacter(id, imageUrl) {
@@ -327,7 +417,7 @@
                     countdownElement.style.display = 'none';
                     gameState = 'playing';
                     gameLoop();
-                    setInterval(moveCharacters, MOVEMENT_INTERVAL);
+                    moveInterval = setInterval(moveCharacters, MOVEMENT_INTERVAL);
                     logMessage("🏁 Battle begins! 🏁");
                 }
             }, 1000);
@@ -335,12 +425,11 @@
 
         function renderCharacters() {
             const gameContainer = document.getElementById('gameContainer');
-            gameContainer.innerHTML = '<div id="winningMessage"></div><div id="countdown"></div><div id="fireworks"></div>';
+            gameContainer.innerHTML = '<div id="winningMessage"></div><div id="countdown"></div><div id="fireworks"></div><div id="winnerFlood"></div>';
             characters.forEach(char => {
                 if (!char.isAlive) return;
                 char.element.className = 'character';
-                char.element.style.left = `${char.x}px`;
-                char.element.style.top = `${char.y}px`;
+                char.element.style.left = `${char.x}px`;char.element.style.top = `${char.y}px`;
                 char.element.innerHTML = `
                     <div class="character-name">${char.name}</div>
                     <img src="${char.imageUrl}" alt="${char.name}">
@@ -349,6 +438,7 @@
                     <div class="hp-bar"><div class="hp-bar-fill" style="width: 100%"></div></div>
                     <div class="hp-text">${char.hp}/${INITIAL_HP}</div>
                 `;
+                char.element.onclick = () => playerAttack(char);
                 gameContainer.appendChild(char.element);
             });
             updateStats();
@@ -393,10 +483,10 @@
 
             damageNumber.textContent = damage;
             damageNumber.style.opacity = '1';
-            damageNumber.style.top = '-30px';
+            damageNumber.style.top = '-40px';
             setTimeout(() => {
                 damageNumber.style.opacity = '0';
-                damageNumber.style.top = '-20px';
+                damageNumber.style.top = '-30px';
             }, 500);
 
             hpBarFill.style.width = `${(target.hp / INITIAL_HP) * 100}%`;
@@ -406,16 +496,97 @@
 
             if (target.hp <= 0) {
                 target.isAlive = false;
-                setTimeout(() => {
-                    target.element.style.display = 'none';
-                }, 500);
                 logKill(attacker, target);
                 attacker.killCount++;
                 attacker.killingSpree++;
                 attacker.killedCharacters.push(target.fullName);
                 logKillingSpree(attacker);
+                eliminateCharacter(target);
             }
             updateStats();
+        }
+
+        function eliminateCharacter(character) {
+            character.element.classList.add('burning');
+            let opacity = 1;
+            const fadeOut = setInterval(() => {
+                if (opacity <= 0) {
+                    clearInterval(fadeOut);
+                    character.element.remove();
+                } else {
+                    opacity -= 0.05;
+                    character.element.style.opacity = opacity;
+                }
+            }, 50);
+        }
+
+        function playerAttack(target) {
+            if (gameState === 'playing' && target.isAlive) {
+                hitCharacter({ name: 'Player', fullName: 'Player' }, target, 1);
+                logMessage('<span class="player-action">Player attacked ' + target.fullName + ' for 1 damage</span>');
+            }
+        }
+
+        function dropHealingItem() {
+            if (gameState !== 'playing') return;
+            const aliveCharacters = characters.filter(char => char.isAlive);
+            if (aliveCharacters.length === 0) return;
+
+            const luckyCharacter = aliveCharacters[Math.floor(Math.random() * aliveCharacters.length)];
+            const healAmount = Math.floor(Math.random() * 20) + 10;
+            luckyCharacter.hp = Math.min(INITIAL_HP, luckyCharacter.hp + healAmount);
+
+            const hpBarFill = luckyCharacter.element.querySelector('.hp-bar-fill');
+            const hpText = luckyCharacter.element.querySelector('.hp-text');
+            hpBarFill.style.width = `${(luckyCharacter.hp / INITIAL_HP) * 100}%`;
+            hpText.textContent = `${luckyCharacter.hp}/${INITIAL_HP}`;
+
+            const healingItem = document.createElement('div');
+            healingItem.className = 'item';
+            healingItem.textContent = '💚';
+            healingItem.style.left = `${luckyCharacter.x}px`;
+            healingItem.style.top = `${luckyCharacter.y - 30}px`;
+            document.getElementById('gameContainer').appendChild(healingItem);
+
+            setTimeout(() => healingItem.remove(), 2000);
+
+            logMessage(`💚 ${luckyCharacter.fullName} found a healing item and restored ${healAmount} HP!`);
+            logMessage('<span class="player-action">Player dropped a healing item</span>');
+            updateStats();
+        }
+
+        function dropBomb() {
+            if (gameState !== 'playing') return;
+            const aliveCharacters = characters.filter(char => char.isAlive);
+            if (aliveCharacters.length === 0) return;
+
+            const damage = Math.floor(Math.random() * 30) + 20;
+            
+            const bomb = document.createElement('div');
+            bomb.className = 'item';
+            bomb.textContent = '💣';
+            bomb.style.left = `${GAME_WIDTH / 2}px`;
+            bomb.style.top = `${GAME_HEIGHT / 2}px`;
+            document.getElementById('gameContainer').appendChild(bomb);
+
+            setTimeout(() => {
+                bomb.remove();
+                aliveCharacters.forEach(char => {
+                    hitCharacter({ name: 'Bomb', fullName: 'Bomb' }, char, damage);
+                });
+                logMessage(`💥 Bomb exploded! All characters took ${damage} damage!`);
+            }, 2000);
+
+            logMessage(`💣 A bomb has been dropped! It will explode in 2 seconds!`);
+            logMessage('<span class="player-action">Player dropped a bomb</span>');
+        }
+
+        function changeMovementSpeed(factor) {
+            MOVEMENT_INTERVAL = Math.max(500, Math.min(5000, MOVEMENT_INTERVAL / factor));
+            clearInterval(moveInterval);
+            moveInterval = setInterval(moveCharacters, MOVEMENT_INTERVAL);
+            logMessage(`🏃 Movement speed ${factor > 1 ? 'increased' : 'decreased'}!`);
+            logMessage('<span class="player-action">Player changed movement speed</span>');
         }
 
         function logMessage(message) {
@@ -483,7 +654,7 @@
             if (char.killedCharacters.length > 0) {
                 const killedList = document.createElement('div');
                 killedList.className = 'killed-list';
-                killedList.innerHTML = 'Killed: ' + char.killedCharacters.join(', ');
+                killedList.innerHTML = 'Eliminated: ' + char.killedCharacters.join(', ');
                 statEntry.appendChild(killedList);
             }
 
@@ -495,9 +666,82 @@
             if (aliveCharacters.length === 1) {
                 winner = aliveCharacters[0];
                 gameState = 'finished';
-                showWinningMessage();
-                startFireworks();
+                clearInterval(moveInterval);
+                celebrateWinner();
             }
+        }
+
+        function celebrateWinner() {
+            winner.element.classList.add('celebrating');
+            startContinuousFireworks();
+            moveWinnerAround();
+            floodScreenWithWinnerName();
+            playCelebrationSound();
+            setTimeout(showWinningMessage, 10000);
+        }
+
+        function playCelebrationSound() {
+            const audio = new Audio("sounds/waku.ogg"); // Corrected path
+            audio.play().catch(error => console.error('Error playing sound:', error));
+          }
+
+        function moveWinnerAround() {
+            let angle = 0;
+            const radius = 100;
+            const centerX = GAME_WIDTH / 2 - CHARACTER_SIZE / 2;
+            const centerY = GAME_HEIGHT / 2 - CHARACTER_SIZE / 2;
+
+            const moveInterval = setInterval(() => {
+                if (gameState !== 'finished') {
+                    clearInterval(moveInterval);
+                    return;
+                }
+
+                angle += 0.05;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+
+                winner.element.style.left = `${x}px`;
+                winner.element.style.top = `${y}px`;
+            }, 50);
+        }
+
+        function startContinuousFireworks() {
+            const fireworksInterval = setInterval(() => {
+                if (gameState !== 'finished') {
+                    clearInterval(fireworksInterval);
+                    return;
+                }
+                createPixelFirework(document.getElementById('fireworks'));
+            }, 200);
+        }
+
+        function createPixelFirework(container) {
+            const firework = document.createElement('div');
+            firework.className = 'pixel-firework';
+            firework.style.left = `${Math.random() * GAME_WIDTH}px`;
+            firework.style.top = `${Math.random() * GAME_HEIGHT}px`;
+            firework.style.backgroundColor = getRandomColor();
+            container.appendChild(firework);
+
+            setTimeout(() => firework.remove(), 1000);
+        }
+
+        function floodScreenWithWinnerName() {
+            const floodContainer = document.getElementById('winnerFlood');
+            floodContainer.innerHTML = '';
+            for (let i = 0; i < 100; i++) {
+                const nameElement = document.createElement('div');
+                nameElement.className = 'winner-name';
+                nameElement.textContent = winner.fullName;
+                nameElement.style.left = `${Math.random() * 100}%`;
+                nameElement.style.top = `${Math.random() * 100}%`;
+                nameElement.style.transform = `rotate(${Math.random() * 360}deg)`;
+                floodContainer.appendChild(nameElement);
+            }
+            setTimeout(() => {
+                floodContainer.innerHTML = '';
+            }, 15000);
         }
 
         function gameLoop() {
@@ -519,7 +763,7 @@
                     ${winner.killedCharacters.map(name => `<li>${name}</li>`).join('')}
                 </ul>
                 <button onclick="initializeGame()">Start Again</button>
-                <button onclick="window.location.href='index.html'">Back to Main Page</button>
+                <button onclick="window.location.href='index.html'">Back to Screensaver</button>
             `;
             winningMessage.style.display = 'block';
         }
@@ -528,53 +772,60 @@
             document.getElementById('winningMessage').style.display = 'none';
         }
 
-        function startFireworks() {
-            const fireworksContainer = document.getElementById('fireworks');
-            for (let i = 0; i < 50; i++) {
-                setTimeout(() => {
-                    createFirework(fireworksContainer);
-                }, i * 200);
-            }
-        }
-
-        function createFirework(container) {
-            const firework = document.createElement('div');
-            firework.className = 'firework';
-            firework.style.left = `${Math.random() * 100}%`;
-            firework.style.top = `${Math.random() * 100}%`;
-            firework.style.backgroundColor = getRandomColor();
-            container.appendChild(firework);
-
-            animateFirework(firework);
-        }
-
-        function animateFirework(firework) {
-            let opacity = 1;
-            const fadeOut = setInterval(() => {
-                if (opacity <= 0) {
-                    clearInterval(fadeOut);
-                    firework.remove();
-                } else {
-                    opacity -= 0.02;
-                    firework.style.opacity = opacity;
-                }
-            }, 50);
-        }
-
         function getRandomColor() {
             const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
             return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function showHowToPlay() {
+            const howToPlay = document.getElementById('howToPlay');
+            howToPlay.innerHTML = `
+                <h2>How to Play</h2>
+                <p>Welcome to Nothing Forest Guild Battle Royale!</p>
+                <ul><li>Click on a character to deal 1 damage</li>
+                    <li>Use the "Drop Healing" button to heal a random character</li>
+                    <li>Use the "Drop Bomb" button to damage all characters</li>
+                    <li>Press '-' to slow down character movement</li>
+                    <li>Press '+' to speed up character movement</li>
+                    <li>Press 'H' to show/hide these instructions</li>
+                    <li>Press 'B' to go to Screensaver</li>
+                </ul>
+                <p>The last man standing wins!</p>
+                <button onclick="hideHowToPlay()">Close</button>
+            `;
+            howToPlay.style.display = 'block';
+        }
+
+        function hideHowToPlay() {
+            document.getElementById('howToPlay').style.display = 'none';
         }
 
         function goToOriginalPage() {
             gameState = 'idle';
             characters = [];
             winner = null;
-            document.getElementById('gameContainer').innerHTML = '<div id="winningMessage"></div><div id="countdown"></div><div id="fireworks"></div>';
+            document.getElementById('gameContainer').innerHTML = '<div id="winningMessage"></div><div id="countdown"></div><div id="fireworks"></div><div id="winnerFlood"></div>';
             document.getElementById('logContainer').innerHTML = '';
             document.getElementById('statsContainer').innerHTML = '';
             document.getElementById('gameInfo').innerHTML = '<button onclick="initializeGame()">Start Battle Royale</button>';
         }
+
+        // Keyboard controls
+        document.addEventListener('keydown', (event) => {
+            if (event.key === '-') {
+                changeMovementSpeed(0.5);
+            } else if (event.key === '+' || event.key === '=') {
+                changeMovementSpeed(2);
+            } else if (event.key === 'h' || event.key === 'H' || event.key === '้' || event.key === '็') {
+                if (document.getElementById('howToPlay').style.display === 'none') {
+                    showHowToPlay();
+                } else {
+                    hideHowToPlay();
+                }
+            } else if (event.key === 'b' || event.key === 'B' || event.key === 'ิ' || event.key === 'ฺ') {
+                window.location.href = 'index.html';
+            }
+        });
 
         // Initial setup
         goToOriginalPage();

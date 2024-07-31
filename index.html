@@ -27,12 +27,18 @@
         #twitchLink a { color: #9146FF; text-decoration: none; }
         #twitchLink a:hover { text-decoration: underline; }
         .hidden { opacity: 0; pointer-events: none; }
+        .link-clicked { 
+            color: #ff00ea;
+            text-decoration: none; 
+            font-weight: bold;
+        }
     </style>
+    
     <script>
 
         document.addEventListener('keydown', function(event) {
 
-            if (event.key === 'B' || event.key === 'b') {
+            if (event.key === 'b' || event.key === 'B' || event.key === 'ิ' || event.key === 'ฺ') {
 
                 window.location.href = 'battle-royale.html';
 
@@ -54,11 +60,15 @@
             <p>Click: Toggle Link</p>
             <p>H: Toggle This Menu</p>
             <p>B: Go to Battle Royale</p>
+            <p>X: Go to @NothingJioo</p>
+            <p>T: Go to Nothing Forest</p>
             <br>
             <h2>Credits</h2>
             <p>All assets are copyrighted by <a href="https://x.com/NothingJioo" target="_blank">@NothingJioo</a></p>
             <p><a href="https://www.twitch.tv/jiooooooooooooooooooooooo" target="_blank">twitch.tv/jiooooooooooooooooooooooo</a></p>
+            <br>
             <p>Created by Riko Prushka</p>
+            <p>2024</p>
             </div>
         </div>
     </div>
@@ -76,7 +86,7 @@
         const nativeCharacterSize = 200;
 
         // Add your sound file URL here
-        const soundEffect = new Audio('sound/wakuwaku2.ogg');
+        const soundEffect = new Audio('sounds/waku.ogg');
 
         function resizeCanvas() {
             const containerWidth = container.clientWidth;
@@ -113,7 +123,6 @@
             'pixel/MaOsS_Korn.png', //
             'pixel/momotan_sumimo.png', //
             'pixel/mynameiszip.png', //
-            'pixel/mynameiszip2.png', //
             'pixel/Nine3D.png', //
             'pixel/nohss!w.png', //
             'pixel/PeatCN76.png', //
@@ -233,10 +242,32 @@
                     break;
                 case 'h':
                 case 'H':
+                case '้':
+                case '็':
                     toggleHowToPlay();
+                    break;
+                case 't':
+                case 'T':
+                case 'ะ':
+                case 'ธ':
+                    redirectToTwitch();
+                    break;
+                case 'x':
+                case 'X':
+                case ')':
+                case 'ป':
+                    redirectToX();
                     break;
             }
         });
+
+        function redirectToTwitch() {
+            window.location.href = 'https://www.twitch.tv/jiooooooooooooooooooooooo';
+        }
+
+        function redirectToX() {
+            window.location.href = 'https://x.com/NothingJioo';
+        }
 
         Promise.all(characterImages.map(img => new Promise(resolve => img.onload = resolve)))
             .then(() => {
