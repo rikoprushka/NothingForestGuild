@@ -45,12 +45,12 @@
             width: 400px;
             height: 720px;
             background-color: #0A0A0A;
-            color: #ffffff;
+            color: #F5F5F5;
             overflow-y: auto;
             padding: 10px;
             box-sizing: border-box;
             font-size: 10px;
-            line-height: 1.8;
+            line-height: 2.0;
         }
         .character {
             position: absolute;
@@ -169,7 +169,7 @@
             color: #FF1744;
         }
         .spree-message {
-            color: #FFD600;
+            color: #FFEA00;
             font-weight: bold;
         }
         .character-name-log {
@@ -327,16 +327,16 @@
     </div>
 
     <script>
+        // buff or nerf
         const GAME_WIDTH = 720;
         const GAME_HEIGHT = 720;
         const CHARACTER_SIZE = 50;
-        const ATTACK_RANGE = 100;
-        const ATTACK_COOLDOWN = 550;
-        let MOVEMENT_INTERVAL = 1750;
+        const ATTACK_RANGE = 200;
+        const ATTACK_COOLDOWN = 570;
+        let MOVEMENT_INTERVAL = 2300;
         const INITIAL_HP = 1000;
 
-        // Add the celebration sound URL here
-        const CELEBRATION_SOUND_URL = 'sounds/waku.ogg';
+        const CELEBRATION_SOUND_URL = 'sounds/zz.ogg';
 
         const characterUrls = [
             'pixel/AnimalWillD0.png',
@@ -345,6 +345,7 @@
             'pixel/ChocoMeow_Bs.png',
             'pixel/ChomPlu_PINK.png',
             'pixel/daiyas_diary.png',
+            //'pixel/daiyas_diarymask.png',
             'pixel/darkwarkry.png',
             'pixel/FadeArtey199x.png',
             'pixel/fluffynaff.png',
@@ -359,6 +360,7 @@
             'pixel/MaOsS_Korn.png',
             'pixel/MoMotan_Sumimo.png',
             'pixel/mynameiszip.png',
+            //'pixel/mynameiszip2.png',
             'pixel/Nine3D.png',
             'pixel/nohssiw_i.png',
             'pixel/PeatCN76.png',
@@ -368,7 +370,7 @@
             'pixel/RikoPrushka.png',
             'pixel/simoence.png',
             'pixel/tiwvy.png',
-            'pixel/V3ntoRies.png'
+            'pixel/V3ntoRies.png',
         ];
 
         let characters = [];
@@ -376,7 +378,7 @@
         let winner = null;
         let moveInterval;
 
-        function getCharacterName(url, maxLength = 12) {
+        function getCharacterName(url, maxLength = 14) {
             let name = url.split('/').pop().split('.')[0];
             return name.length > maxLength ? name.substring(0, maxLength) : name;
         }
@@ -384,7 +386,7 @@
         function createCharacter(id, imageUrl) {
             return {
                 id,
-                name: getCharacterName(imageUrl, 12),
+                name: getCharacterName(imageUrl, 14),
                 fullName: getCharacterName(imageUrl),
                 x: Math.random() * (GAME_WIDTH - CHARACTER_SIZE),
                 y: Math.random() * (GAME_HEIGHT - CHARACTER_SIZE),
@@ -529,7 +531,7 @@
         function playerAttack(target) {
             if (gameState === 'playing' && target.isAlive) {
                 hitCharacter({ name: 'Player', fullName: 'Player' }, target, 1);
-                logMessage('<span class="player-action">Player attacked ' + target.fullName + ' for 1 damage</span>');
+                logMessage('<span class="player-action">Player attacked ' + target.fullName +' for 1 damage</span>');
             }
         }
 
@@ -539,7 +541,7 @@
             if (aliveCharacters.length === 0) return;
 
             const luckyCharacter = aliveCharacters[Math.floor(Math.random() * aliveCharacters.length)];
-            const healAmount = Math.floor(Math.random() * 20) + 10;
+            const healAmount = Math.floor(Math.random() * 99) + 1;
             luckyCharacter.hp = Math.min(INITIAL_HP, luckyCharacter.hp + healAmount);
 
             const hpBarFill = luckyCharacter.element.querySelector('.hp-bar-fill');
@@ -556,7 +558,7 @@
 
             setTimeout(() => healingItem.remove(), 2000);
 
-            logMessage(`💚 ${luckyCharacter.fullName} found a healing item and restored ${healAmount} HP!`);
+            logMessage(`💚 ${luckyCharacter.fullName} found a healing item<br>and restored ${healAmount} HP!`);
             logMessage('<span class="player-action">Player dropped a healing item</span>');
             updateStats();
         }
@@ -580,10 +582,10 @@
                 aliveCharacters.forEach(char => {
                     hitCharacter({ name: 'Bomb', fullName: 'Bomb' }, char, damage);
                 });
-                logMessage(`💥 Bomb exploded! All characters took ${damage} damage!`);
+                logMessage(`💥 Bomb exploded!<br>All characters took ${damage} damage!`);
             }, 2000);
 
-            logMessage(`💣 A bomb has been dropped! It will explode in 2 seconds!`);
+            logMessage(`💣 A bomb has been dropped!<br>It will explode in 2 seconds!`);
             logMessage('<span class="player-action">Player dropped a bomb</span>');
         }
 
@@ -604,7 +606,7 @@
         }
 
         function logAttack(attacker, target, damage) {
-            logMessage(`<span class="character-name-log">${attacker.fullName}</span> ⚔️ <span class="character-name-log">${target.fullName}</span> for ${damage} damage!`);
+            logMessage(`<span class="character-name-log">${attacker.fullName}</span> ⚔️ <span class="character-name-log">${target.fullName}</span> <br>for ${damage} damage!`);
         }
 
         function logKill(attacker, target) {
@@ -613,14 +615,14 @@
 
         function logKillingSpree(character) {
             const spreeMessages = [
-                "🔥🔥 Double Kill!",
-                "🔥🔥🔥 Triple Kill!",
-                "🔥🔥🔥🔥 Ultra Kill!",
-                "🔥🔥🔥🔥🔥 RAMPAGE!!",
-                "🏆 BEYOND GODLIKE, someone kill them!!✨"
+                "x2 Double Kill!!<br>⭐⭐",
+                "is on a <span style='color:#00FF40;'>killing spree</span><br>x3 Triple Kill!!<br>⭐⭐⭐",
+                "is <span style='color:#A855F7;'>dominating</span><br>x4 Ultra Kill!!<br>⭐⭐⭐⭐",
+                "is on a <span style='color:#FF0080;'>mega Kill</span> streak<br>x5 RAMPAGE!! <br>⭐⭐⭐⭐⭐",
+                "is beyond <span style='color:#F97316;'>GODLIKE</span>, someone kill them!!<br>⭐⭐⭐⭐⭐⭐"
             ];
             if (character.killingSpree >= 2 && character.killingSpree <= 6) {
-                logMessage(`<span class="spree-message">${character.fullName}: ${spreeMessages[character.killingSpree - 2]}</span>`);
+                logMessage(`<span class="spree-message">${character.fullName} ${spreeMessages[character.killingSpree - 2]}</span>`);
             }
         }
 
@@ -630,7 +632,7 @@
 
         function updateStats() {
             const statsContainer = document.getElementById('statsContainer');
-            statsContainer.innerHTML = '<h3>Characters</h3>';
+            statsContainer.innerHTML = '<h3>Alive</h3>';
             
             // Alive characters
             characters.filter(char => char.isAlive).forEach(char => {
@@ -687,7 +689,7 @@
         }
 
         function playCelebrationSound() {
-            const audio = new Audio("sounds/waku.ogg"); // Corrected path
+            const audio = new Audio("sounds/zz.ogg"); // Corrected path
             audio.play().catch(error => console.error('Error playing sound:', error));
           }
 
@@ -747,7 +749,7 @@
             }
             setTimeout(() => {
                 floodContainer.innerHTML = '';
-            }, 15000);
+            }, 10000);
         }
 
         function gameLoop() {
@@ -763,8 +765,8 @@
             winningMessage.innerHTML = `
                 <h2 id="winnerName">${winner.fullName} is victorious!</h2>
                 <p>Total Damage Dealt: ${winner.totalDamage}</p>
-                <p>Kills: ${winner.killCount}</p>
-                <p>Characters Eliminated:</p>
+                <p>Kill Count: ${winner.killCount}</p>
+                <p>Eliminated:</p>
                 <ul>
                     ${winner.killedCharacters.map(name => `<li>${name}</li>`).join('')}
                 </ul>
