@@ -682,18 +682,22 @@
             logMessage(`<span class="kill-message">☠️ <span class="character-name-log">${attacker.fullName}</span> eliminated <span class="character-name-log">${target.fullName}</span>!</span>`);
         }
     
-    function logKillingSpree(character) {
-        const spreeMessages = [
-            "x2 Double Kill!!<br>⭐⭐",
-            "is on a <span style='color:#00FF40;'>killing spree</span><br>x3 Triple Kill!!<br>⭐⭐⭐",
-            "is <span style='color:#A855F7;'>dominating</span><br>x4 Ultra Kill!!<br>⭐⭐⭐⭐",
-            "is on a <span style='color:#FF0080;'>mega Kill</span> streak<br>x5 RAMPAGE!! <br>⭐⭐⭐⭐⭐",
-            "is beyond <span style='color:#F97316;'>GODLIKE</span>, someone kill them!!<br>⭐⭐⭐⭐⭐⭐"
-        ];
-        if (character.killingSpree >= 2 && character.killingSpree <= 6) {
-            logMessage(`<span class="spree-message">${character.fullName} ${spreeMessages[character.killingSpree - 2]}</span>`);
+        function logKillingSpree(character) {
+            const spreeMessages = [
+                "x2 Double Kill!!<br>⭐⭐",
+                "is on a <span style='color:#00FF40;'>killing spree</span>!!<br>x3 Triple Kill!!<br>⭐⭐⭐",
+                "is <span style='color:#A855F7;'>dominating</span>!!<br>x4 Ultra Kill!!<br>⭐⭐⭐⭐",
+                "is on a <span style='color:#FF0080;'>mega Kill</span> streak!!<br>x5 RAMPAGE!!<br>⭐⭐⭐⭐⭐",
+                "is <span style='color:#FF8000;'>unstoppable</span>!!<br>x6<br>⭐⭐⭐⭐⭐⭐",
+                "is <span style='color:#808000;'>wicked sick</span>!!<br>x7<br>⭐⭐⭐⭐⭐⭐⭐",
+                "is on a <span style='color:#FF80FF;'>monster kill</span> streak!!<br>x8<br>⭐⭐⭐⭐⭐⭐⭐⭐",
+                "is <span style='color:#FF0000;'>GODLIKE</span>!!<br>x9<br>⭐⭐⭐⭐⭐⭐⭐⭐⭐",
+                "is beyond <span style='color:#FBBF24;'>GODLIKE, someone kill them</span>!!<br>x10<br>⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐"
+            ];
+            if (character.killingSpree >= 2 && character.killingSpree <= 10) {
+                logMessage(`<span class="spree-message">${character.fullName} ${spreeMessages[character.killingSpree - 2]}</span>`);
+            }
         }
-    }
 
     function clearLog() {
         document.getElementById('logContainer').innerHTML = '';
