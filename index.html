@@ -65,6 +65,7 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 10px;
+            width: 90%;
         }
         .mobileButton {
             background-color: rgba(255,255,255,0.2);
@@ -74,10 +75,13 @@
             font-size: 16px;
             cursor: pointer;
             border-radius: 5px;
+            flex: 1 0 calc(33.333% - 10px);
+            max-width: calc(33.333% - 10px);
         }
         @media (max-width: 768px) {
             #mobileControls { display: flex; }
             #howToPlay { font-size: 10px; }
+            .mobileButton { font-size: 14px; }
         }
     </style>
 </head>
@@ -109,6 +113,7 @@
             <button class="mobileButton" id="flipBtn">Flip</button>
             <button class="mobileButton" id="soundBtn">Sound</button>
             <button class="mobileButton" id="helpBtn">Help</button>
+            <button class="mobileButton" id="battleRoyaleBtn">Battle Royale</button>
         </div>
     </div>
     <script>
@@ -190,6 +195,10 @@
             const img = new Image();
             img.src = url;
             return img;
+        });
+
+        document.getElementById('battleRoyaleBtn').addEventListener('click', () => {
+            window.location.href = 'battle-royale.html';
         });
 
         function getRandomColor() {
