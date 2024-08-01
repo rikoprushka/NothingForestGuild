@@ -6,9 +6,31 @@
     <title>Nothing Forest Pixel</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
-        body { margin: 0; overflow: hidden; background-color: #000; font-family: 'Press Start 2P', cursive; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        #container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
-        canvas { display: block; background-color: #000; }
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Press Start 2P', cursive;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            touch-action: none;
+        }
+        #container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas {
+            display: block;
+            background-color: #000;
+            max-width: 100%;
+            max-height: 100%;
+        }
         #twitchLink, #howToPlay { 
             position: absolute; 
             left: 50%; 
@@ -21,32 +43,43 @@
             color: #fff;
             font-size: 12px;
             line-height: 1.5;
+            max-width: 90%;
+            overflow-y: auto;
         }
         #twitchLink { bottom: 20px; }
-        #howToPlay { top: 20px; max-width: 80%; }
-        #twitchLink a { color: #9146FF; text-decoration: none; }
-        #twitchLink a:hover { text-decoration: underline; }
+        #howToPlay { top: 20px; max-height: 80%; }
+        #twitchLink a, #howToPlay a { color: #9146FF; text-decoration: none; }
+        #twitchLink a:hover, #howToPlay a:hover { text-decoration: underline; }
         .hidden { opacity: 0; pointer-events: none; }
         .link-clicked { 
             color: #ff00ea;
             text-decoration: none; 
             font-weight: bold;
         }
+        #mobileControls {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .mobileButton {
+            background-color: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        @media (max-width: 768px) {
+            #mobileControls { display: flex; }
+            #howToPlay { font-size: 10px; }
+        }
     </style>
-    
-    <script>
-
-        document.addEventListener('keydown', function(event) {
-
-            if (event.key === 'b' || event.key === 'B' || event.key === 'ิ' || event.key === 'ฺ') {
-
-                window.location.href = 'battle-royale.html';
-
-            }
-
-        });
-
-    </script>
 </head>
 <body>
     <div id="container">
@@ -57,7 +90,7 @@
             <p>↑/↓: Change Speed</p>
             <p>←/→: Flip Image</p>
             <p>Numpad 5: Play Sound</p>
-            <p>Click: Toggle Link</p>
+            <p>Click/Tap: Toggle Link</p>
             <p>H: Toggle This Menu</p>
             <p>B: Go to Battle Royale</p>
             <p>X: Go to @NothingJioo</p>
@@ -69,7 +102,13 @@
             <br>
             <p>Created by Riko Prushka</p>
             <p>2024</p>
-            </div>
+        </div>
+        <div id="mobileControls">
+            <button class="mobileButton" id="speedUpBtn">Speed Up</button>
+            <button class="mobileButton" id="slowDownBtn">Slow Down</button>
+            <button class="mobileButton" id="flipBtn">Flip</button>
+            <button class="mobileButton" id="soundBtn">Sound</button>
+            <button class="mobileButton" id="helpBtn">Help</button>
         </div>
     </div>
     <script>
@@ -85,7 +124,6 @@
         const defaultHeight = 720;
         const nativeCharacterSize = 200;
 
-        // Add your sound file URL here
         const soundEffect = new Audio('https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/sounds/zz.ogg');
 
         function resizeCanvas() {
@@ -109,7 +147,6 @@
             'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/ChocoMeow_Bs.png',
             'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/ChomPlu_PINK.png',
             'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/daiyas_diary.png',
-            //'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/daiyas_diarymask.png',
             'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/darkwarkry.png',
             'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/FadeArtey199x.png',
             'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/fluffynaff.png',
@@ -124,7 +161,6 @@
             'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/MaOsS_Korn.png',
             'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/MoMotan_Sumimo.png',
             'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/mynameiszip.png',
-            //'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/mynameiszip2.png',
             'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/Nine3D.png',
             'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/nohssiw_i.png',
             'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/PeatCN76.png',
@@ -221,26 +257,20 @@
             requestAnimationFrame(animate);
         }
 
-        document.addEventListener('keydown', (event) => {
-            switch(event.key) {
+        function handleKeyboardControls(key) {
+            switch(key) {
                 case 'ArrowUp':
-                    logo.speed = Math.min(logo.speed + 0.5, 10);
-                    logo.dx = Math.sign(logo.dx) * logo.speed;
-                    logo.dy = Math.sign(logo.dy) * logo.speed;
+                    changeSpeed(0.5);
                     break;
                 case 'ArrowDown':
-                    logo.speed = Math.max(logo.speed - 0.5, 0.5);
-                    logo.dx = Math.sign(logo.dx) * logo.speed;
-                    logo.dy = Math.sign(logo.dy) * logo.speed;
+                    changeSpeed(-0.5);
                     break;
                 case 'ArrowLeft':
                 case 'ArrowRight':
-                    logo.flipped = !logo.flipped;
+                    flipLogo();
                     break;
                 case '5':
-                    if (event.location === KeyboardEvent.DOM_KEY_LOCATION_NUMPAD) {
-                        soundEffect.play();
-                    }
+                    playSound();
                     break;
                 case 'h':
                 case 'H':
@@ -260,8 +290,28 @@
                 case 'ป':
                     redirectToX();
                     break;
+                case 'b':
+                case 'B':
+                case 'ิ':
+                case 'ฺ':
+                    window.location.href = 'battle-royale.html';
+                    break;
             }
-        });
+        }
+
+        function changeSpeed(delta) {
+            logo.speed = Math.max(0.5, Math.min(logo.speed + delta, 10));
+            logo.dx = Math.sign(logo.dx) * logo.speed;
+            logo.dy = Math.sign(logo.dy) * logo.speed;
+        }
+
+        function flipLogo() {
+            logo.flipped = !logo.flipped;
+        }
+
+        function playSound() {
+            soundEffect.play();
+        }
 
         function redirectToTwitch() {
             window.location.href = 'https://www.twitch.tv/jiooooooooooooooooooooooo';
@@ -270,6 +320,46 @@
         function redirectToX() {
             window.location.href = 'https://x.com/NothingJioo';
         }
+
+        document.addEventListener('keydown', (event) => {
+            handleKeyboardControls(event.key);
+        });
+
+        // Mobile controls
+        document.getElementById('speedUpBtn').addEventListener('click', () => changeSpeed(0.5));
+        document.getElementById('slowDownBtn').addEventListener('click', () => changeSpeed(-0.5));
+        document.getElementById('flipBtn').addEventListener('click', flipLogo);
+        document.getElementById('soundBtn').addEventListener('click', playSound);
+        document.getElementById('helpBtn').addEventListener('click', toggleHowToPlay);
+
+        // Touch events for canvas
+        let touchStartX, touchStartY;
+
+        canvas.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+        });
+
+        canvas.addEventListener('touchend', (e) => {
+            const touch = e.changedTouches[0];
+            const touchEndX = touch.clientX;
+            const touchEndY = touch.clientY;
+
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+
+            if (Math.abs(deltaX) < 10 && Math.abs(deltaY) < 10) {
+                // It's a tap, toggle link visibility
+                toggleLinkVisibility();
+            } else if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                // Horizontal swipe, flip the logo
+                flipLogo();
+            } else {
+                // Vertical swipe, change speed
+                changeSpeed(deltaY > 0 ? -0.5 : 0.5);
+            }
+        });
 
         Promise.all(characterImages.map(img => new Promise(resolve => img.onload = resolve)))
             .then(() => {
