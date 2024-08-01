@@ -338,7 +338,7 @@
         let MOVEMENT_INTERVAL = 2300;
         const INITIAL_HP = 1000;
 
-        const CELEBRATION_SOUND_URL = 'sounds/zz.ogg';
+        const CELEBRATION_SOUND_URL = 'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/sounds/zz.ogg';
 
         const characterUrls = [
             'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/AnimalWillD0.png',
@@ -848,7 +848,7 @@
         }
     
         function playZZSound() {
-            const audio = new Audio("sounds/zz.ogg");
+            const audio = new Audio("https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/sounds/zz.ogg");
             audio.play().catch(error => console.error('Error playing sound:', error));
         }
     
