@@ -403,7 +403,7 @@
         let moveInterval;
         let gameLoopId;
 
-        function getCharacterName(url, maxLength = 14) {
+        function getCharacterName(url, maxLength = 21) {
             let name = url.split('/').pop().split('.')[0];
             return name.length > maxLength ? name.substring(0, maxLength) : name;
         }
@@ -411,7 +411,7 @@
         function createCharacter(id, imageUrl) {
             return {
                 id,
-                name: getCharacterName(imageUrl, 14),
+                name: getCharacterName(imageUrl, 21),
                 fullName: getCharacterName(imageUrl),
                 x: Math.random() * (GAME_WIDTH - CHARACTER_SIZE),
                 y: Math.random() * (GAME_HEIGHT - CHARACTER_SIZE),
