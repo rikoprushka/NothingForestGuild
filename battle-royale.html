@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet?v=1.2.3">
     <style>
         body {
-            font-family: 'Press Start 2P';
+            font-family: 'Press Start 2P', cursive;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -22,7 +22,7 @@
             width: 1520px;
             height: 720px;
             background: radial-gradient(ellipse at top, #020617, transparent),
-            radial-gradient(ellipse at bottom, #052E16, transparent);
+                        radial-gradient(ellipse at bottom, #052E16, transparent);
         }
         #statsContainer {
             width: 400px;
@@ -127,9 +127,9 @@
             font-size: 14px;
             color: #F5F5F5;
             background: radial-gradient(ellipse at top, #020617, transparent),
-            radial-gradient(ellipse at bottom, #F50057, transparent);
+                        radial-gradient(ellipse at bottom, #00BFA5, transparent);
             cursor: pointer;
-            font-family: 'Press Start 2P';
+            font-family: 'Press Start 2P', cursive;
         }
         #gameInfo {
             text-align: center;
@@ -186,8 +186,8 @@
             font-size: 240px;
             color: #FF4081;
             text-shadow: 2px 2px 10px #F50057;
-            display: grid;
-          }
+            display: none;
+        }
         .stat-entry {
             margin-bottom: 10px;
             border-bottom: 1px solid #333;
@@ -274,6 +274,7 @@
             background-color: rgba(0, 0, 0, 0.9);
             padding: 20px;
             border-radius: 10px;
+            line-height: 2.0;
             text-align: left;
             display: none;
             z-index: 1000;
@@ -315,7 +316,9 @@
         <button onclick="dropHealingItem()">Drop Healing 💚</button>
         <button onclick="dropBomb()">Drop Bomb 💣</button>
     </div>
-    <div id="gameInfo"></div>
+    <div id="gameInfo">
+        <button id="startButton" onclick="initializeGame()">Start Battle Royale</button>
+    </div>
     <div id="howToPlay"></div>
     <div id="credits">
         <p>All assets are copyrighted by
@@ -327,7 +330,6 @@
     </div>
 
     <script>
-        // buff or nerf
         const GAME_WIDTH = 720;
         const GAME_HEIGHT = 720;
         const CHARACTER_SIZE = 50;
@@ -345,7 +347,6 @@
             'pixel/ChocoMeow_Bs.png',
             'pixel/ChomPlu_PINK.png',
             'pixel/daiyas_diary.png',
-            //'pixel/daiyas_diarymask.png',
             'pixel/darkwarkry.png',
             'pixel/FadeArtey199x.png',
             'pixel/fluffynaff.png',
@@ -360,7 +361,6 @@
             'pixel/MaOsS_Korn.png',
             'pixel/MoMotan_Sumimo.png',
             'pixel/mynameiszip.png',
-            //'pixel/mynameiszip2.png',
             'pixel/Nine3D.png',
             'pixel/nohssiw_i.png',
             'pixel/PeatCN76.png',
@@ -377,6 +377,7 @@
         let gameState = 'idle';
         let winner = null;
         let moveInterval;
+        let gameLoopId;
 
         function getCharacterName(url, maxLength = 14) {
             let name = url.split('/').pop().split('.')[0];
@@ -393,7 +394,7 @@
                 hp: INITIAL_HP,
                 isAlive: true,
                 lastAttackTime: 0,
-                element: document.createElement('div'),
+                element: null,
                 imageUrl: imageUrl,
                 killCount: 0,
                 killingSpree: 0,
@@ -403,15 +404,29 @@
         }
 
         function initializeGame() {
+            if (gameState === 'playing' || gameState === 'finished') {
+                // Stop the current game
+                clearInterval(moveInterval);
+                cancelAnimationFrame(gameLoopId);
+                
+                // Clear the game container
+                const gameContainer = document.getElementById('gameContainer');
+                gameContainer.innerHTML = '<div id="winningMessage"></div><div id="countdown"></div><div id="fireworks"></div><div id="winnerFlood"></div>';
+                
+                // Reset game state
+                gameState = 'idle';
+                winner = null;
+            }
+        
+            // Start a new game
             characters = characterUrls.map((url, index) => createCharacter(index, url));
             gameState = 'countdown';
-            winner = null;
             renderCharacters();
             clearLog();
             hideWinningMessage();
             startCountdown();
         }
-
+        
         function startCountdown() {
             const countdownElement = document.getElementById('countdown');
             countdownElement.style.display = 'block';
@@ -424,20 +439,26 @@
                     clearInterval(countdownInterval);
                     countdownElement.style.display = 'none';
                     gameState = 'playing';
-                    gameLoop();
-                    moveInterval = setInterval(moveCharacters, MOVEMENT_INTERVAL);
+                    startGame();
                     logMessage("🏁 Battle begins! 🏁");
                 }
             }, 1000);
         }
-
+        
+        function startGame() {
+            gameLoopId = requestAnimationFrame(gameLoop);
+            moveInterval = setInterval(moveCharacters, MOVEMENT_INTERVAL);
+        }
+    
         function renderCharacters() {
             const gameContainer = document.getElementById('gameContainer');
             gameContainer.innerHTML = '<div id="winningMessage"></div><div id="countdown"></div><div id="fireworks"></div><div id="winnerFlood"></div>';
             characters.forEach(char => {
                 if (!char.isAlive) return;
+                char.element = document.createElement('div');
                 char.element.className = 'character';
-                char.element.style.left = `${char.x}px`;char.element.style.top = `${char.y}px`;
+                char.element.style.left = `${char.x}px`;
+                char.element.style.top = `${char.y}px`;
                 char.element.innerHTML = `
                     <div class="character-name">${char.name}</div>
                     <img src="${char.imageUrl}" alt="${char.name}">
@@ -451,7 +472,7 @@
             });
             updateStats();
         }
-
+    
         function moveCharacters() {
             characters.forEach(char => {
                 if (!char.isAlive) return;
@@ -461,34 +482,39 @@
                 char.element.style.top = `${char.y}px`;
             });
         }
-
+    
         function attackCharacters() {
-            characters.forEach((attacker, i) => {
-                if (!attacker.isAlive) return;
-                characters.forEach((target, j) => {
-                    if (i === j || !target.isAlive) return;
+            const aliveCharacters = characters.filter(char => char.isAlive);
+            aliveCharacters.sort(() => Math.random() - 0.5);
+    
+            aliveCharacters.forEach((attacker) => {
+                const potentialTargets = aliveCharacters.filter(char => char !== attacker);
+                potentialTargets.sort(() => Math.random() - 0.5);
+    
+                for (const target of potentialTargets) {
                     const distance = Math.hypot(attacker.x - target.x, attacker.y - target.y);
                     if (distance < ATTACK_RANGE && Date.now() - attacker.lastAttackTime > ATTACK_COOLDOWN) {
                         const damage = Math.floor(Math.random() * 99) + 1;
                         hitCharacter(attacker, target, damage);
                         attacker.lastAttackTime = Date.now();
+                        break;
                     }
-                });
+                }
             });
         }
-
+    
         function hitCharacter(attacker, target, damage) {
             target.hp -= damage;
             attacker.totalDamage += damage;
-
+    
             const hitEffect = target.element.querySelector('.hit-effect');
             const damageNumber = target.element.querySelector('.damage-number');
             const hpBarFill = target.element.querySelector('.hp-bar-fill');
             const hpText = target.element.querySelector('.hp-text');
-
+    
             hitEffect.style.opacity = '1';
             setTimeout(() => { hitEffect.style.opacity = '0'; }, 200);
-
+    
             damageNumber.textContent = damage;
             damageNumber.style.opacity = '1';
             damageNumber.style.top = '-40px';
@@ -496,12 +522,12 @@
                 damageNumber.style.opacity = '0';
                 damageNumber.style.top = '-30px';
             }, 500);
-
+    
             hpBarFill.style.width = `${(target.hp / INITIAL_HP) * 100}%`;
             hpText.textContent = `${Math.max(0, target.hp)}/${INITIAL_HP}`;
-
+    
             logAttack(attacker, target, damage);
-
+    
             if (target.hp <= 0) {
                 target.isAlive = false;
                 logKill(attacker, target);
@@ -513,7 +539,7 @@
             }
             updateStats();
         }
-
+    
         function eliminateCharacter(character) {
             character.element.classList.add('burning');
             let opacity = 1;
@@ -527,47 +553,47 @@
                 }
             }, 50);
         }
-
+    
         function playerAttack(target) {
             if (gameState === 'playing' && target.isAlive) {
                 hitCharacter({ name: 'Player', fullName: 'Player' }, target, 1);
                 logMessage('<span class="player-action">Player attacked ' + target.fullName +' for 1 damage</span>');
             }
         }
-
+    
         function dropHealingItem() {
             if (gameState !== 'playing') return;
             const aliveCharacters = characters.filter(char => char.isAlive);
             if (aliveCharacters.length === 0) return;
-
+    
             const luckyCharacter = aliveCharacters[Math.floor(Math.random() * aliveCharacters.length)];
             const healAmount = Math.floor(Math.random() * 99) + 1;
             luckyCharacter.hp = Math.min(INITIAL_HP, luckyCharacter.hp + healAmount);
-
+    
             const hpBarFill = luckyCharacter.element.querySelector('.hp-bar-fill');
             const hpText = luckyCharacter.element.querySelector('.hp-text');
             hpBarFill.style.width = `${(luckyCharacter.hp / INITIAL_HP) * 100}%`;
             hpText.textContent = `${luckyCharacter.hp}/${INITIAL_HP}`;
-
+    
             const healingItem = document.createElement('div');
             healingItem.className = 'item';
             healingItem.textContent = '💚';
             healingItem.style.left = `${luckyCharacter.x}px`;
             healingItem.style.top = `${luckyCharacter.y - 30}px`;
             document.getElementById('gameContainer').appendChild(healingItem);
-
+    
             setTimeout(() => healingItem.remove(), 2000);
-
+    
             logMessage(`💚 ${luckyCharacter.fullName} found a healing item<br>and restored ${healAmount} HP!`);
             logMessage('<span class="player-action">Player dropped a healing item</span>');
             updateStats();
         }
-
+    
         function dropBomb() {
             if (gameState !== 'playing') return;
             const aliveCharacters = characters.filter(char => char.isAlive);
             if (aliveCharacters.length === 0) return;
-
+    
             const damage = Math.floor(Math.random() * 30) + 20;
             
             const bomb = document.createElement('div');
@@ -576,7 +602,7 @@
             bomb.style.left = `${GAME_WIDTH / 2}px`;
             bomb.style.top = `${GAME_HEIGHT / 2}px`;
             document.getElementById('gameContainer').appendChild(bomb);
-
+    
             setTimeout(() => {
                 bomb.remove();
                 aliveCharacters.forEach(char => {
@@ -584,11 +610,11 @@
                 });
                 logMessage(`💥 Bomb exploded!<br>All characters took ${damage} damage!`);
             }, 2000);
-
+    
             logMessage(`💣 A bomb has been dropped!<br>It will explode in 2 seconds!`);
             logMessage('<span class="player-action">Player dropped a bomb</span>');
         }
-
+    
         function changeMovementSpeed(factor) {
             MOVEMENT_INTERVAL = Math.max(500, Math.min(5000, MOVEMENT_INTERVAL / factor));
             clearInterval(moveInterval);
@@ -596,7 +622,7 @@
             logMessage(`🏃 Movement speed ${factor > 1 ? 'increased' : 'decreased'}!`);
             logMessage('<span class="player-action">Player changed movement speed</span>');
         }
-
+    
         function logMessage(message) {
             const logContainer = document.getElementById('logContainer');
             const logEntry = document.createElement('div');
@@ -604,15 +630,15 @@
             logContainer.appendChild(logEntry);
             logContainer.scrollTop = logContainer.scrollHeight;
         }
-
+    
         function logAttack(attacker, target, damage) {
             logMessage(`<span class="character-name-log">${attacker.fullName}</span> ⚔️ <span class="character-name-log">${target.fullName}</span> <br>for ${damage} damage!`);
         }
-
+    
         function logKill(attacker, target) {
             logMessage(`<span class="kill-message">☠️ <span class="character-name-log">${attacker.fullName}</span> eliminated <span class="character-name-log">${target.fullName}</span>!</span>`);
         }
-
+    
         function logKillingSpree(character) {
             const spreeMessages = [
                 "x2 Double Kill!!<br>⭐⭐",
@@ -625,29 +651,27 @@
                 logMessage(`<span class="spree-message">${character.fullName} ${spreeMessages[character.killingSpree - 2]}</span>`);
             }
         }
-
+    
         function clearLog() {
             document.getElementById('logContainer').innerHTML = '';
         }
-
+    
         function updateStats() {
             const statsContainer = document.getElementById('statsContainer');
             statsContainer.innerHTML = '<h3>Alive</h3>';
             
-            // Alive characters
             characters.filter(char => char.isAlive).forEach(char => {
                 const statEntry = createStatEntry(char, false);
                 statsContainer.appendChild(statEntry);
             });
-
-            // Deceased characters
+    
             statsContainer.innerHTML += '<h3>Deceased</h3>';
             characters.filter(char => !char.isAlive).forEach(char => {
                 const statEntry = createStatEntry(char, true);
                 statsContainer.appendChild(statEntry);
             });
         }
-
+    
         function createStatEntry(char, isDeceased) {
             const statEntry = document.createElement('div');
             statEntry.className = `stat-entry ${isDeceased ? 'deceased' : ''}`;
@@ -658,17 +682,17 @@
                 Kills: ${char.killCount}<br>
                 Damage: ${char.totalDamage}
             `;
-
+    
             if (char.killedCharacters.length > 0) {
                 const killedList = document.createElement('div');
                 killedList.className = 'killed-list';
                 killedList.innerHTML = 'Eliminated: ' + char.killedCharacters.join(', ');
                 statEntry.appendChild(killedList);
             }
-
+    
             return statEntry;
         }
-
+    
         function checkGameOver() {
             const aliveCharacters = characters.filter(char => char.isAlive);
             if (aliveCharacters.length === 1) {
@@ -678,7 +702,7 @@
                 celebrateWinner();
             }
         }
-
+    
         function celebrateWinner() {
             winner.element.classList.add('celebrating');
             startContinuousFireworks();
@@ -687,33 +711,33 @@
             playCelebrationSound();
             setTimeout(showWinningMessage, 10000);
         }
-
+    
         function playCelebrationSound() {
-            const audio = new Audio("sounds/zz.ogg"); // Corrected path
+            const audio = new Audio(CELEBRATION_SOUND_URL);
             audio.play().catch(error => console.error('Error playing sound:', error));
-          }
-
+        }
+    
         function moveWinnerAround() {
             let angle = 0;
             const radius = 100;
             const centerX = GAME_WIDTH / 2 - CHARACTER_SIZE / 2;
             const centerY = GAME_HEIGHT / 2 - CHARACTER_SIZE / 2;
-
+    
             const moveInterval = setInterval(() => {
                 if (gameState !== 'finished') {
                     clearInterval(moveInterval);
                     return;
                 }
-
+    
                 angle += 0.05;
                 const x = centerX + Math.cos(angle) * radius;
                 const y = centerY + Math.sin(angle) * radius;
-
+    
                 winner.element.style.left = `${x}px`;
                 winner.element.style.top = `${y}px`;
             }, 50);
         }
-
+    
         function startContinuousFireworks() {
             const fireworksInterval = setInterval(() => {
                 if (gameState !== 'finished') {
@@ -723,7 +747,7 @@
                 createPixelFirework(document.getElementById('fireworks'));
             }, 200);
         }
-
+    
         function createPixelFirework(container) {
             const firework = document.createElement('div');
             firework.className = 'pixel-firework';
@@ -731,10 +755,10 @@
             firework.style.top = `${Math.random() * GAME_HEIGHT}px`;
             firework.style.backgroundColor = getRandomColor();
             container.appendChild(firework);
-
+    
             setTimeout(() => firework.remove(), 700);
         }
-
+    
         function floodScreenWithWinnerName() {
             const floodContainer = document.getElementById('winnerFlood');
             floodContainer.innerHTML = '';
@@ -751,15 +775,15 @@
                 floodContainer.innerHTML = '';
             }, 10000);
         }
-
+    
         function gameLoop() {
             if (gameState === 'playing') {
                 attackCharacters();
                 checkGameOver();
-                requestAnimationFrame(gameLoop);
+                gameLoopId = requestAnimationFrame(gameLoop);
             }
         }
-
+    
         function showWinningMessage() {
             const winningMessage = document.getElementById('winningMessage');
             winningMessage.innerHTML = `
@@ -770,27 +794,28 @@
                 <ul>
                     ${winner.killedCharacters.map(name => `<li>${name}</li>`).join('')}
                 </ul>
-                <button onclick="initializeGame()">Start Again</button>
+                <button onclick="hideWinningMessage(); initializeGame();">Start New Game</button>
                 <button onclick="window.location.href='index.html'">Back to Screensaver</button>
             `;
             winningMessage.style.display = 'block';
         }
-
+    
         function hideWinningMessage() {
             document.getElementById('winningMessage').style.display = 'none';
         }
-
+    
         function getRandomColor() {
             const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
             return colors[Math.floor(Math.random() * colors.length)];
         }
-
+    
         function showHowToPlay() {
             const howToPlay = document.getElementById('howToPlay');
             howToPlay.innerHTML = `
                 <h2>How to Play</h2>
                 <p>Welcome to Nothing Forest Guild Battle Royale!</p>
-                <ul><li>Click on a character to deal 1 damage</li>
+                <ul>
+                    <li>Click on a character to deal 1 damage</li>
                     <li>Use the "Drop Healing" button to heal a random character</li>
                     <li>Use the "Drop Bomb" button to damage all characters</li>
                     <li>Press 'F11' to go full screen</li>
@@ -798,27 +823,35 @@
                     <li>Press '+' to speed up character movement</li>
                     <li>Press 'H' to show/hide these instructions</li>
                     <li>Press 'B' to go to Screensaver</li>
+                    <li>Press 'Numpad 5' to play a sound</li>
                 </ul>
                 <p>The last man standing wins!</p>
                 <button onclick="hideHowToPlay()">Close</button>
             `;
             howToPlay.style.display = 'block';
         }
-
+    
         function hideHowToPlay() {
             document.getElementById('howToPlay').style.display = 'none';
         }
-
+    
         function goToOriginalPage() {
             gameState = 'idle';
             characters = [];
             winner = null;
+            clearInterval(moveInterval);
+            cancelAnimationFrame(gameLoopId);
             document.getElementById('gameContainer').innerHTML = '<div id="winningMessage"></div><div id="countdown"></div><div id="fireworks"></div><div id="winnerFlood"></div>';
             document.getElementById('logContainer').innerHTML = '';
             document.getElementById('statsContainer').innerHTML = '';
-            document.getElementById('gameInfo').innerHTML = '<button onclick="initializeGame()">Start Battle Royale</button>';
+            document.getElementById('startButton').style.display = 'inline-block';
         }
-
+    
+        function playZZSound() {
+            const audio = new Audio("sounds/zz.ogg");
+            audio.play().catch(error => console.error('Error playing sound:', error));
+        }
+    
         // Keyboard controls
         document.addEventListener('keydown', (event) => {
             if (event.key === '-') {
@@ -833,11 +866,13 @@
                 }
             } else if (event.key === 'b' || event.key === 'B' || event.key === 'ิ' || event.key === 'ฺ') {
                 window.location.href = 'index.html';
+            } else if (event.key === '5' && event.location === KeyboardEvent.DOM_KEY_LOCATION_NUMPAD) {
+                playZZSound();
             }
         });
-
+    
         // Initial setup
         goToOriginalPage();
     </script>
-</body>
-</html>
+    </body>
+    </html>
