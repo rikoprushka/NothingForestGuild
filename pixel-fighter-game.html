@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Fighter Game v2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .character {
+            position: absolute;
+            bottom: 20px;
+            width: 100px;
+            height: 150px;
+            transition: left 0.3s, right 0.3s, transform 0.3s;
+        }
+        #player1 { left: 20%; }
+        #player2 { right: 20%; }
+        .flip { transform: scaleX(-1); }
+        .jump { animation: jump 0.5s; }
+        @keyframes jump {
+            0%, 100% { bottom: 20px; }
+            50% { bottom: 100px; }
+        }
+        .attack { animation: attack 0.3s; }
+        @keyframes attack {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(30px); }
+        }
+        .hit { animation: hit 0.2s; }
+        @keyframes hit {
+            0%, 100% { filter: none; }
+            50% { filter: brightness(2) saturate(2); }
+        }
+        .character-select-screen, .fighting-screen {
+            aspect-ratio: 16 / 9;
+            max-width: 100%;
+            max-height: 100vh;
+            margin: auto;
+            overflow: hidden;
+        }
+        #logPanel, #selectionLogPanel {
+            height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <div id="mainMenu" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+        <div class="bg-gray-800 p-8 rounded-lg text-center">
+            <h1 class="text-4xl font-bold mb-8">Enhanced Fighter Game v2</h1>
+            <button id="startGameBtn" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded text-xl">Start Game</button>
+        </div>
+    </div>
+
+    <div id="characterSelection" class="fixed inset-0 bg-black bg-opacity-80 items-center justify-center z-50 hidden">
+        <div class="character-select-screen bg-gray-800 p-4 rounded-lg flex">
+            <div class="w-3/4 pr-4">
+                <h2 class="text-3xl font-bold mb-4">Select Your Characters</h2>
+                <div id="characterGrid" class="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4 mb-4 overflow-y-auto" style="max-height: calc(100% - 180px);"></div>
+                <div class="flex justify-between mt-4">
+                    <button id="backBtn" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded text-xl">Back</button>
+                    <button id="confirmSelectionBtn" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded text-xl hidden">Confirm Selection</button>
+                </div>
+            </div>
+            <div id="selectionLogPanel" class="w-1/4 bg-gray-700 p-4 rounded-lg overflow-y-auto">
+                <h3 class="text-xl font-bold mb-2">Selection Log</h3>
+                <div id="selectionLog"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="gameArea" class="relative w-full h-screen overflow-hidden hidden">
+        <div class="fighting-screen flex flex-col h-full">
+            <div class="h-16 bg-gray-800 flex justify-between items-center px-4">
+                <div class="flex items-center space-x-4">
+                    <span id="player1Name" class="text-xl font-bold"></span>
+                    <div class="w-48 h-4 bg-gray-600 rounded">
+                        <div id="player1Health" class="h-full bg-red-500 rounded"></div>
+                    </div>
+                    <div class="w-48 h-4 bg-gray-600 rounded">
+                        <div id="player1Mana" class="h-full bg-blue-500 rounded"></div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="w-48 h-4 bg-gray-600 rounded">
+                        <div id="player2Mana" class="h-full bg-blue-500 rounded"></div>
+                    </div>
+                    <div class="w-48 h-4 bg-gray-600 rounded">
+                        <div id="player2Health" class="h-full bg-red-500 rounded"></div>
+                    </div>
+                    <span id="player2Name" class="text-xl font-bold"></span>
+                </div>
+            </div>
+            <div class="flex-grow relative">
+                <div id="player1" class="character">
+                    <img id="player1Image" src="" alt="Player 1" class="w-full h-full object-contain">
+                </div>
+                <div id="player2" class="character">
+                    <img id="player2Image" src="" alt="Player 2" class="w-full h-full object-contain">
+                </div>
+            </div>
+        </div>
+        <div id="logPanel" class="absolute top-16 right-0 w-1/4 h-full bg-gray-800 p-4 overflow-y-auto">
+            <h3 class="text-xl font-bold mb-2">Battle Log</h3>
+            <div id="battleLog"></div>
+        </div>
+    </div>
+
+    <div id="winnerAnnouncement" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white text-black p-8 rounded-lg text-center">
+            <h2 class="text-4xl font-bold mb-4">Winner!</h2>
+            <p id="winnerName" class="text-2xl"></p>
+            <img id="winnerImage" src="" alt="Winner" class="w-64 h-auto mx-auto my-4">
+            <button id="playAgain" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded mt-4">Play Again</button>
+        </div>
+    </div>
+
+    <script>
+        const characterUrls = [
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/ano_hikari.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/AnimalWillD0.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/ArmyBangtanSonyeondan.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/Arth101s.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/ChocoMeow_Bs.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/ChomPlu_PINK.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/daiyas_diary.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/darkwarkry.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/FadeArtey199x.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/fluffynaff.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/gu_ball.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/Ikunoreo.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/jiooooooooooooooooooooooo.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/JorNorsLife.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/ke1_ng0.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/Lasy_Onion.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/Laurie_Blisse.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/LKlemonX.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/MaOsS_Korn.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/MoMotan_Sumimo.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/mynameiszip.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/Nine3D.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/nohssiw_i.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/PeatCN76.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/ppunchpk_jpeg.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/PuPaDuPP.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/Purgoor.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/RikoPrushka.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/simoence.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/tiwvy.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/pixel/V3ntoRies.png',
+        ];
+
+        const backgroundUrls = [
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/bg/bg.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/bg/bg2.png',
+            'https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/bg/bg3.png',
+        ];
+
+        const gameArea = document.getElementById('gameArea');
+        const player1 = document.getElementById('player1');
+        const player2 = document.getElementById('player2');
+        const player1Image = document.getElementById('player1Image');
+        const player2Image = document.getElementById('player2Image');
+        const player1Health = document.getElementById('player1Health');
+        const player2Health = document.getElementById('player2Health');
+        const player1Mana = document.getElementById('player1Mana');
+        const player2Mana = document.getElementById('player2Mana');
+        const player1Name = document.getElementById('player1Name');
+        const player2Name = document.getElementById('player2Name');
+        const winnerAnnouncement = document.getElementById('winnerAnnouncement');
+        const winnerName = document.getElementById('winnerName');
+        const winnerImage = document.getElementById('winnerImage');
+        const playAgain = document.getElementById('playAgain');
+        const mainMenu = document.getElementById('mainMenu');
+        const characterSelection = document.getElementById('characterSelection');
+        const confirmSelectionBtn = document.getElementById('confirmSelectionBtn');
+        const selectionLog = document.getElementById('selectionLog');
+        const battleLog = document.getElementById('battleLog');
+
+        let player1Data, player2Data;
+        let gameInterval;
+        let selectedPlayer1, selectedPlayer2;
+
+        function truncateName(name, maxLength = 14) {
+            return name.length > maxLength ? name.substring(0, maxLength - 3) + '...' : name;
+        }
+
+        function getCharacterName(url) {
+            const fileName = url.split('/').pop();
+            return truncateName(fileName.split('.')[0]);
+        }
+
+        function initCharacterSelection() {
+            const characterGrid = document.getElementById('characterGrid');
+            characterGrid.innerHTML = '';
+            selectionLog.innerHTML = '';
+            characterUrls.forEach((url, index) => {
+                const characterName = getCharacterName(url);
+                const characterButton = createCharacterButton(url, characterName, index);
+                characterGrid.appendChild(characterButton);
+            });
+            mainMenu.style.display = 'none';
+            characterSelection.style.display = 'flex';
+            confirmSelectionBtn.style.display = 'none';
+            selectedPlayer1 = null;
+            selectedPlayer2 = null;
+        }
+
+        function createCharacterButton(url, name, index) {
+            const button = document.createElement('button');
+            button.innerHTML = `
+                <img src="${url}" alt="${name}" class="w-full h-auto mb-2">
+                <span class="text-sm">${name}</span>
+            `;
+            button.className = 'bg-purple-500 hover:bg-purple-600 p-2 rounded flex flex-col items-center relative';
+            button.onclick = () => toggleCharacterSelection(url, name, index, button);
+            return button;
+        }
+
+        function toggleCharacterSelection(url, name, index, button) {
+            if (button.classList.contains('ring-4')) {
+                // Deselect
+                if (selectedPlayer1 && selectedPlayer1.index === index) {
+                    selectedPlayer1 = null;
+                    logSelection('Player 1 deselected', name);
+                } else if (selectedPlayer2 && selectedPlayer2.index === index) {
+                    selectedPlayer2 = null;
+                    logSelection('Player 2 deselected', name);
+                }
+                button.classList.remove('ring-4', 'ring-blue-500', 'ring-red-500');
+                button.querySelector('div')?.remove();
+            } else {
+                // Select
+                if (!selectedPlayer1) {
+                    selectedPlayer1 = { url, name, index };
+                    logSelection('Player 1 selected', name);
+                    updateCharacterButton(button, 'P1');
+                } else if (!selectedPlayer2) {
+                    selectedPlayer2 = { url, name, index };
+                    logSelection('Player 2 selected', name);
+                    updateCharacterButton(button, 'P2');
+                }
+            }
+            confirmSelectionBtn.style.display = (selectedPlayer1 && selectedPlayer2) ? 'block' : 'none';
+        }
+
+        function updateCharacterButton(button, player) {
+            const borderColor = player === 'P1' ? 'ring-blue-500' : 'ring-red-500';
+            button.classList.add('ring-4', borderColor);
+            
+            const playerLabel = document.createElement('div');
+            playerLabel.className = `absolute top-0 left-0 bg-${player === 'P1' ? 'blue' : 'red'}-500 text-white px-2 py-1 text-xs rounded-br`;
+            playerLabel.textContent = player;
+            button.appendChild(playerLabel);
+        }
+
+        function logSelection(action, name) {
+            const logEntry = document.createElement('p');
+            logEntry.textContent = `${action}: ${name}`;
+            logEntry.className = 'mb-2';
+            selectionLog.appendChild(logEntry);
+            selectionLog.scrollTop = selectionLog.scrollHeight;
+        }
+
+        function startGame() {
+            player1Data = { health: 100, mana: 100, url: selectedPlayer1.url, name: selectedPlayer1.name };
+            player2Data = { health: 100, mana: 100, url: selectedPlayer2.url, name: selectedPlayer2.name };
+
+            player1Image.src = player1Data.url;
+            player2Image.src = player2Data.url;
+            player1Name.textContent = player1Data.name;
+            player2Name.textContent = player2Data.name;
+
+            updateHealth(player1Health, player1Data.health);
+            updateHealth(player2Health, player2Data.health);
+            updateMana(player1Mana, player1Data.mana);
+            updateMana(player2Mana, player2Data.mana);
+
+            characterSelection.style.display = 'none';
+            gameArea.style.display = 'block';
+
+            initGame();
+        }
+
+        function initGame() {
+            const randomBackground = backgroundUrls[Math.floor(Math.random() * backgroundUrls.length)];
+            gameArea.querySelector('.fighting-screen').style.backgroundImage = `url('${randomBackground}')`;
+            gameArea.querySelector('.fighting-screen').style.backgroundSize = 'cover';
+            gameArea.querySelector('.fighting-screen').style.backgroundPosition = 'center';
+
+            player1.style.left = '20%';
+            player2.style.right = '20%';
+            player2.classList.add('flip');
+
+            battleLog.innerHTML = '';
+            logBattleAction('Battle started!');
+
+            startGameLoop();
+        }
+
+        function startGameLoop() {
+            gameInterval = setInterval(() => {
+                regenerateMana();
+                aiAction(player1Data, player2Data, player1, player2);
+                aiAction(player2Data, player1Data, player2, player1);
+            }, 1000);
+        }
+
+        function updateHealth(healthBar, health) {
+            healthBar.style.width = `${health}%`;
+        }
+
+        function updateMana(manaBar, mana) {
+            manaBar.style.width = `${mana}%`;
+        }
+
+        function attack(attacker, defender, attackerElement, defenderElement) {
+            if (attacker.mana < 10) return;
+
+            attacker.mana -= 10;
+            updateMana(attacker === player1Data ? player1Mana : player2Mana, attacker.mana);
+
+            attackerElement.classList.add('attack');
+            setTimeout(() => attackerElement.classList.remove('attack'), 300);
+
+            const damage = Math.floor(Math.random() * 10) + 5;
+            defender.health -= damage;
+            defender.health = Math.max(0, defender.health);
+
+            updateHealth(defender === player1Data ? player1Health : player2Health, defender.health);
+
+            defenderElement.classList.add('hit');
+            setTimeout(() => defenderElement.classList.remove('hit'), 200);
+
+            logBattleAction(`${attacker.name} attacks ${defender.name} for ${damage} damage!`);
+
+            if (defender.health === 0) {
+                announceWinner(attacker);
+            }
+
+            moveCharacters(attacker, defender, attackerElement, defenderElement);
+        }
+
+        function jump(player, playerElement) {
+            if (player.mana < 15) return;
+
+            player.mana -= 15;
+            updateMana(player === player1Data ? player1Mana : player2Mana, player.mana);
+
+            playerElement.classList.add('jump');
+            setTimeout(() => playerElement.classList.remove('jump'), 500);
+
+            logBattleAction(`${player.name} jumps!`);
+        }
+
+        function moveCharacters(attacker, defender, attackerElement, defenderElement) {
+            const attackerPos = parseInt(attackerElement.style.left) || 100 - parseInt(attackerElement.style.right);
+            const defenderPos = parseInt(defenderElement.style.left) || 100 - parseInt(defenderElement.style.right);
+
+            if (attackerPos < defenderPos) {
+                // Attacker is on the left
+                attackerElement.style.left = `${Math.min(attackerPos + 5, defenderPos - 20)}%`;
+                attackerElement.classList.remove('flip');
+                defenderElement.classList.add('flip');
+            } else {
+                // Attacker is on the right
+                attackerElement.style.right = `${Math.min(100 - attackerPos + 5, 100 - defenderPos - 20)}%`;
+                attackerElement.classList.add('flip');
+                defenderElement.classList.remove('flip');
+            }
+        }
+
+        function regenerateMana() {
+            if (player1Data.mana < 100) {
+                player1Data.mana = Math.min(player1Data.mana + 5, 100);
+                updateMana(player1Mana, player1Data.mana);
+            }
+            if (player2Data.mana < 100) {
+                player2Data.mana = Math.min(player2Data.mana + 5, 100);
+                updateMana(player2Mana, player2Data.mana);
+            }
+        }
+
+        function announceWinner(winner) {
+            clearInterval(gameInterval);
+            winnerName.textContent = winner.name;
+            winnerImage.src = winner.url;
+            winnerAnnouncement.style.display = 'flex';
+            logBattleAction(`${winner.name} wins the battle!`);
+        }
+
+        function aiAction(aiPlayer, opponent, aiElement, opponentElement) {
+            if (aiPlayer.health === 0 || opponent.health === 0) return;
+
+            const action = Math.random();
+            if (action < 0.6 && aiPlayer.mana >= 10) {
+                attack(aiPlayer, opponent, aiElement, opponentElement);
+            } else if (action < 0.8 && aiPlayer.mana >= 15) {
+                jump(aiPlayer, aiElement);
+            } else {
+                moveCharacters(aiPlayer, opponent, aiElement, opponentElement);
+            }
+        }
+
+        function logBattleAction(message) {
+            const logEntry = document.createElement('p');
+            logEntry.textContent = message;
+            logEntry.className = 'mb-2';
+            battleLog.appendChild(logEntry);
+            battleLog.scrollTop = battleLog.scrollHeight;
+        }
+
+        document.getElementById('startGameBtn').onclick = initCharacterSelection;
+        document.getElementById('backBtn').onclick = () => {
+            characterSelection.style.display = 'none';
+            mainMenu.style.display = 'flex';
+            selectedPlayer1 = null;
+            selectedPlayer2 = null;
+        };
+        confirmSelectionBtn.onclick = startGame;
+        playAgain.onclick = () => {
+            winnerAnnouncement.style.display = 'none';
+            initCharacterSelection();
+        };
+
+        // Start with the main menu
+        mainMenu.style.display = 'flex';
+    </script>
+</body>
+</html>
