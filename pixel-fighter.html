@@ -325,7 +325,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
-            <h2 class="text-3xl font-bold mb-4 text-yellow-400">Winner!</h2>
+            <h2 class="text-3xl font-bold mb-4" style="color: #BFA100;">Winner!</h2>
             <p id="winnerName" class="text-xl mb-4"></p>
             <img id="winnerImage" src="" alt="Winner" class="w-48 h-auto mx-auto mb-4">
             <div id="battleSummary" class="text-left mt-4 text-sm">
@@ -840,6 +840,16 @@
             startGameBtn.disabled = true;
             updateSelectedCharacterNames();
         }
+
+        // Add this new function to handle the 'B' key press
+function handleKeyPress(event) {
+    if (event.key.toLowerCase() === 'b') {
+        window.location.href = 'index.html';
+    }
+}
+
+// Add event listener for key presses
+document.addEventListener('keydown', handleKeyPress);
 
         randomSelectBtn.onclick = () => {
             if (!player1Data) {
