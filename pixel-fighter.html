@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nothing Forest Guild Battle Royale</title>
+    <title>Nothing Forest Pixel Fighter</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -83,10 +83,10 @@
             height: 100%;
             position: relative;
             overflow: hidden;
-            margin-bottom: 1px; /* Add margin to create space */
+            margin-bottom: 1px;
         }
-        .health-bar {
-            height: 30px;
+        .health-bar, .mana-bar {
+            height: 15px;
             transition: width 0.3s ease-in-out;
         }
         .character {
@@ -136,17 +136,7 @@
         }
         @keyframes float-emoji {
             0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            100% { transform: translate(200px, -100px) scale(2); opacity: 0; } /* Increased travel distance and added scale */
-        }
-        .special-move {
-            position: absolute;
-            font-size: 36px;
-            animation: special-move 1.5s forwards;
-        }
-        @keyframes special-move {
-            0% { transform: scale(1) rotate(0deg); opacity: 1; }
-            50% { transform: scale(2) rotate(180deg); opacity: 1; }
-            100% { transform: scale(3) rotate(360deg); opacity: 0; }
+            100% { transform: translate(200px, -100px) scale(2); opacity: 0; }
         }
         @keyframes heal {
             0% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.4); }
@@ -171,11 +161,11 @@
             border-radius: 10px;
             backdrop-filter: blur(10px);
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-            margin-top: 1px; /* Add margin to create space */
+            margin-top: 1px;
         }
         .top-bar-bg {
-            background-color: transparent;
-            backdrop-filter: none;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
         }
         #elapsedTime {
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
@@ -187,67 +177,18 @@
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-
         .rainbow-bg {
             background: linear-gradient(125deg,
-                                        #B71C1C,
-                                        #0f172a,
-                                        #880E4F,
-                                        #0f172a,
-                                        #4A148C,
-                                        #0f172a,
-                                        #311B92,
-                                        #0f172a,
-                                        #1A237E,
-                                        #0f172a,
-                                        #0D47A1,
-                                        #0f172a,
-                                        #01579B,
-                                        #0f172a,
-                                        #006064,
-                                        #0f172a,
-                                        #004D40,
-                                        #0f172a,
-                                        #1B5E20,
-                                        #0f172a,
-                                        #33691E,
-                                        #0f172a,
-                                        #E65100,
-                                        #0f172a,
-                                        #BF360C,
-                                        #0f172a,
-                                        #B71C1C,
-                                        #0f172a,
-                                        #880E4F,
-                                        #0f172a,
-                                        #4A148C,
-                                        #0f172a,
-                                        #311B92,
-                                        #0f172a,
-                                        #1A237E,
-                                        #0f172a,
-                                        #0D47A1,
-                                        #0f172a,
-                                        #01579B,
-                                        #0f172a,
-                                        #006064,
-                                        #0f172a,
-                                        #004D40,
-                                        #0f172a,
-                                        #1B5E20,
-                                        #0f172a,
-                                        #33691E,
-                                        #0f172a,
-                                        #E65100,
-                                        #0f172a);
-
+                #B71C1C, #0f172a, #880E4F, #0f172a, #4A148C, #0f172a, #311B92, #0f172a,
+                #1A237E, #0f172a, #0D47A1, #0f172a, #01579B, #0f172a, #006064, #0f172a,
+                #004D40, #0f172a, #1B5E20, #0f172a, #33691E, #0f172a, #E65100, #0f172a,
+                #BF360C, #0f172a, #B71C1C, #0f172a, #880E4F, #0f172a, #4A148C, #0f172a,
+                #311B92, #0f172a, #1A237E, #0f172a, #0D47A1, #0f172a, #01579B, #0f172a,
+                #006064, #0f172a, #004D40, #0f172a, #1B5E20, #0f172a, #33691E, #0f172a,
+                #E65100, #0f172a);
             background-size: 10000% 10000%;
             animation: rainbow-flow 720s ease infinite;
         }
-        .top-bar-bg {
-            background-color: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-          }
         #credits {
             margin-top: 20px;
             text-align: center;
@@ -257,25 +198,15 @@
         #credits a {
             color: #a0aec0;
             text-decoration: none;
-        }
-        #credits a {
-            text-decoration: none;
-            animation: none;
             transition: text-decoration 0.3s ease-in-out;
         }
-
         #credits a:hover {
             text-decoration: underline;
             animation: smoothBlink 1.5s linear infinite;
         }
-
         @keyframes smoothBlink {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0;
-            }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
         @keyframes hover-jump {
             0%, 100% { transform: translateY(0); }
@@ -287,7 +218,20 @@
         .character-button.selected img {
             animation: hover-jump 0.5s ease-in-out infinite;
         }
-
+        @keyframes rainbow {
+            0% { color: red; }
+            14% { color: orange; }
+            28% { color: yellow; }
+            42% { color: green; }
+            57% { color: blue; }
+            71% { color: indigo; }
+            85% { color: violet; }
+            100% { color: red; }
+        }
+        
+        .rainbow-text {
+            animation: rainbow 4s linear infinite;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white">
@@ -348,17 +292,25 @@
         <div class="top-bar-bg bg-gray-700 h-24 flex justify-between items-center px-4 rounded-[20px]" style="background: none;">
             <div class="flex flex-col items-start">
                 <div id="player1Name" class="text-lg mb-1"></div>
-                <div id="player1HealthContainer" class="w-96 h-10 bg-[#243044]/30 backdrop-blur-md rounded-xl overflow-hidden relative border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+                <div id="player1HealthContainer" class="w-96 h-5 bg-[#243044]/30 backdrop-blur-md rounded-xl overflow-hidden relative border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.5)] mb-1">
                     <div id="player1Health" class="health-bar h-full bg-gradient-to-r from-red-800 to-red-600"></div>
-                    <div id="player1HPText" class="absolute inset-0 flex items-center justify-center text-white text-sm"></div>
+                    <div id="player1HPText" class="absolute inset-0 flex items-center justify-center text-white text-xs"></div>
+                </div>
+                <div id="player1ManaContainer" class="w-96 h-5 bg-[#243044]/30 backdrop-blur-md rounded-xl overflow-hidden relative border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+                    <div id="player1Mana" class="mana-bar h-full bg-gradient-to-r from-blue-800 to-blue-600"></div>
+                    <div id="player1ManaText" class="absolute inset-0 flex items-center justify-center text-white text-xs"></div>
                 </div>
             </div>
             <div id="elapsedTime" class="text-xl font-bold text-yellow-400"></div>
             <div class="flex flex-col items-end">
                 <div id="player2Name" class="text-lg mb-1"></div>
-                <div id="player2HealthContainer" class="w-96 h-10 bg-[#243044]/30 backdrop-blur-md rounded-xl overflow-hidden relative border border-green-500/50 shadow-[0_0_15px_rgba(34,197,94,0.5)]">
+                <div id="player2HealthContainer" class="w-96 h-5 bg-[#243044]/30 backdrop-blur-md rounded-xl overflow-hidden relative border border-green-500/50 shadow-[0_0_15px_rgba(34,197,94,0.5)] mb-1">
                     <div id="player2Health" class="health-bar h-full bg-gradient-to-l from-red-800 to-red-600 float-right"></div>
-                    <div id="player2HPText" class="absolute inset-0 flex items-center justify-center text-white text-sm"></div>
+                    <div id="player2HPText" class="absolute inset-0 flex items-center justify-center text-white text-xs"></div>
+                </div>
+                <div id="player2ManaContainer" class="w-96 h-5 bg-[#243044]/30 backdrop-blur-md rounded-xl overflow-hidden relative border border-green-500/50 shadow-[0_0_15px_rgba(34,197,94,0.5)]">
+                    <div id="player2Mana" class="mana-bar h-full bg-gradient-to-l from-blue-800 to-blue-600 float-right"></div>
+                    <div id="player2ManaText" class="absolute inset-0 flex items-center justify-center text-white text-xs"></div>
                 </div>
             </div>
         </div>
@@ -396,9 +348,9 @@
             <div id="battleSummary" class="text-left mt-4 text-sm">
                 <p id="damageDealt"></p>
                 <p id="healingAmount"></p>
-                <p id="skillUses"></p>
+                <p id="emojiThrown"></p>
+                <p id="manaUsed"></p>
             </div>
-            <div id="skillDamageList" class="text-left mt-4 text-sm"></div>
         </div>
     </div>
 
@@ -444,6 +396,10 @@
         const player2Health = document.getElementById('player2Health');
         const player1HPText = document.getElementById('player1HPText');
         const player2HPText = document.getElementById('player2HPText');
+        const player1Mana = document.getElementById('player1Mana');
+        const player2Mana = document.getElementById('player2Mana');
+        const player1ManaText = document.getElementById('player1ManaText');
+        const player2ManaText = document.getElementById('player2ManaText');
         const player1Name = document.getElementById('player1Name');
         const player2Name = document.getElementById('player2Name');
         const winnerAnnouncement = document.getElementById('winnerAnnouncement');
@@ -469,8 +425,8 @@
         let player1Data, player2Data;
         let gameInterval;
         let startTime;
-        let player1Stats = { damageDealt: 0, healingAmount: 0, skillUses: 0, skillDamage: {} };
-        let player2Stats = { damageDealt: 0, healingAmount: 0, skillUses: 0, skillDamage: {} };
+        let player1Stats = { damageDealt: 0, healingAmount: 0, manaUsed: 0, emojiThrown: 0 };
+        let player2Stats = { damageDealt: 0, healingAmount: 0, manaUsed: 0, emojiThrown: 0 };
 
         function initCharacterSelection() {
             characterGrid.innerHTML = '';
@@ -553,7 +509,8 @@
                 name: getCharacterName(player1Data.url),
                 minDamage: p1MinDamage,
                 maxDamage: p1MaxDamage,
-                specialMoveCharge: 0
+                mana: 100,
+                maxMana: 100
             };
             player2Data = {
                 ...player2Data,
@@ -562,7 +519,8 @@
                 name: getCharacterName(player2Data.url),
                 minDamage: p2MinDamage,
                 maxDamage: p2MaxDamage,
-                specialMoveCharge: 0
+                mana: 100,
+                maxMana: 100
             };
 
             player1.style.backgroundImage = `url('${player1Data.url}')`;
@@ -573,6 +531,8 @@
 
             updateHealth(player1Health, player1HPText, player1Data.health, player1Data.maxHealth);
             updateHealth(player2Health, player2HPText, player2Data.health, player2Data.maxHealth);
+            updateMana(player1Mana, player1ManaText, player1Data.mana, player1Data.maxMana);
+            updateMana(player2Mana, player2ManaText, player2Data.mana, player2Data.maxMana);
 
             characterSelection.style.display = 'none';
             gameArea.classList.remove('hidden');
@@ -606,7 +566,7 @@
         function startGameLoop() {
             gameInterval = setInterval(() => {
                 aiAction(player1Data, player2Data, player1, player2);
-                aiAction(player2Data,player1Data, player2, player1);
+                aiAction(player2Data, player1Data, player2, player1);
                 updateElapsedTime();
             }, 2000);
         }
@@ -615,8 +575,12 @@
             const percentage = (health / maxHealth) * 100;
             healthBar.style.width = `${percentage}%`;
             healthText.textContent = `${health}/${maxHealth}`;
-            healthBar.classList.add('blink');
-            setTimeout(() => healthBar.classList.remove('blink'), 200);
+        }
+
+        function updateMana(manaBar, manaText, mana, maxMana) {
+            const percentage = (mana / maxMana) * 100;
+            manaBar.style.width = `${percentage}%`;
+            manaText.textContent = `${mana}/${maxMana}`;
         }
 
         function updateElapsedTime() {
@@ -647,11 +611,90 @@
                 player2Stats.damageDealt += damage;
             }
 
-            attacker.specialMoveCharge += 10;
-            if (attacker.specialMoveCharge > 100) attacker.specialMoveCharge = 100;
+            // Mana regeneration for the defender
+            defender.mana = Math.min(defender.maxMana, defender.mana + 5);
+            updateMana(
+                defender === player1Data ? player1Mana : player2Mana,
+                defender === player1Data ? player1ManaText : player2ManaText,
+                defender.mana,
+                defender.maxMana
+            );
 
             if (defender.health === 0) {
                 announceWinner(attacker, defender, attackerElement, defenderElement);
+            }
+        }
+
+        function throwEmoji(attacker, defender, attackerElement, defenderElement) {
+            if (attacker.mana < 25) {
+                logBattleAction(`${attacker.name} doesn't have enough mana to throw an item!`);
+                return false;
+            }
+
+            const emojis = ['🧲', '🧸', '🧻', '💣', '🐬', '📱', '👟', '🩲', '🌵', '💩', '⚽', '🏀', '🎮', '🍌', '🍕', '🍰', '🥚', '🦴', '🎤', '📔', '🖱️', '💸', '🐍', '✝️'];
+            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+            const damage = Math.floor((Math.random() * (attacker.maxDamage - attacker.minDamage + 1) + attacker.minDamage) * 3);
+
+            defender.health = Math.max(0, defender.health - damage);
+            attacker.mana -= 25;
+
+            updateHealth(
+                defender === player1Data ? player1Health : player2Health,
+                defender === player1Data ? player1HPText : player2HPText,
+                defender.health,
+                defender.maxHealth
+            );
+            updateMana(
+                attacker === player1Data ? player1Mana : player2Mana,
+                attacker === player1Data ? player1ManaText : player2ManaText,
+                attacker.mana,
+                attacker.maxMana
+            );
+
+            showEmojiAnimation(attackerElement, defenderElement, emoji);
+            showDamageText(defenderElement, damage);
+
+            logBattleAction(`${attacker.name} throws ${emoji} at ${defender.name} for ${damage} damage!`);
+
+            if (attacker === player1Data) {
+                player1Stats.damageDealt += damage;
+                player1Stats.manaUsed += 25;
+                player1Stats.emojiThrown++;
+            } else {
+                player2Stats.damageDealt += damage;
+                player2Stats.manaUsed += 25;
+                player2Stats.emojiThrown++;
+            }
+
+            if (defender.health === 0) {
+                announceWinner(attacker, defender, attackerElement, defenderElement);
+            }
+
+            return true;
+        }
+
+        function defend(player, playerElement) {
+            const healAmount = Math.floor(player.maxHealth * 0.05);
+            player.health = Math.min(player.maxHealth, player.health + healAmount);
+
+            updateHealth(
+                player === player1Data ? player1Health : player2Health,
+                player === player1Data ? player1HPText : player2HPText,
+                player.health,
+                player.maxHealth
+            );
+
+            playerElement.classList.add('heal');
+            setTimeout(() => playerElement.classList.remove('heal'), 1000);
+
+            showHealText(playerElement, healAmount);
+
+            logBattleAction(`${player.name} defends and heals for ${healAmount} HP!`);
+
+            if (player === player1Data) {
+                player1Stats.healingAmount += healAmount;
+            } else {
+                player2Stats.healingAmount += healAmount;
             }
         }
 
@@ -688,25 +731,11 @@
             setTimeout(() => defenderElement.classList.remove('hit'), 200);
         }
 
-        function throwEmoji(attacker, defender, attackerElement, defenderElement) {
-            const emojis = ['🧲', '🧸', '🧻', '💣', '🐬', '📱', '👟', '🩲', '🌵', '💩', '⚽', '🏀', '🎮', '🍌', '🍕', '🍰', '🥚', '🦴', '🎤', '📔', '🖱️', '💸', '🐍', '✝️'];
-            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-            const damage = Math.floor((Math.random() * (attacker.maxDamage - attacker.minDamage + 1) + attacker.minDamage) * 4);
-
-            defender.health = Math.max(0, defender.health - damage);
-
-            updateHealth(
-                defender === player1Data ? player1Health : player2Health,
-                defender === player1Data ? player1HPText : player2HPText,
-                defender.health,
-                defender.maxHealth
-            );
-
+        function showEmojiAnimation(attackerElement, defenderElement, emoji) {
             const emojiElement = document.createElement('div');
             emojiElement.textContent = emoji;
             emojiElement.className = 'emoji';
             
-            // Set initial position (at the attacker)
             const startLeft = attackerElement.offsetLeft + attackerElement.offsetWidth / 2;
             const startTop = attackerElement.offsetTop + attackerElement.offsetHeight / 2;
             emojiElement.style.left = `${startLeft}px`;
@@ -714,107 +743,27 @@
             
             gameArea.appendChild(emojiElement);
 
-            // Trigger reflow to ensure the initial state is rendered
             emojiElement.offsetHeight;
 
-            // Set final position (at the defender)
             const endLeft = defenderElement.offsetLeft + defenderElement.offsetWidth / 2;
             const endTop = defenderElement.offsetTop + defenderElement.offsetHeight / 2;
             emojiElement.style.left = `${endLeft}px`;
             emojiElement.style.top = `${endTop}px`;
             emojiElement.style.transform = 'scale(2)';
 
-            // Remove the emoji after animation completes
-            setTimeout(() => emojiElement.remove(), 2500);
-
-            logBattleAction(`${attacker.name} throws ${emoji} at ${defender.name} for ${damage} critical damage!`);
-
-            if (attacker === player1Data) {
-                player1Stats.damageDealt += damage;
-                player1Stats.skillUses++;
-                player1Stats.skillDamage[emoji] = (player1Stats.skillDamage[emoji] || 0) + damage;
-            } else {
-                player2Stats.damageDealt += damage;
-                player2Stats.skillUses++;
-                player2Stats.skillDamage[emoji] = (player2Stats.skillDamage[emoji] || 0) + damage;
-            }
-
-            attacker.specialMoveCharge += 15;
-            if (attacker.specialMoveCharge > 100) attacker.specialMoveCharge = 100;
-
-            if (defender.health === 0) {
-                announceWinner(attacker, defender, attackerElement, defenderElement);
-            }
+            setTimeout(() => emojiElement.remove(), 2000);
         }
 
-        function defend(player, playerElement) {
-            const healAmount = Math.floor(player.maxHealth * 0.05);
-            player.health = Math.min(player.maxHealth, player.health + healAmount);
+        function aiAction(aiPlayer, opponent, aiElement, opponentElement) {
+            if (aiPlayer.health === 0 || opponent.health === 0) return;
 
-            updateHealth(
-                player === player1Data ? player1Health : player2Health,
-                player === player1Data ? player1HPText : player2HPText,
-                player.health,
-                player.maxHealth
-            );
-
-            playerElement.classList.add('heal');
-            setTimeout(() => playerElement.classList.remove('heal'), 1000);
-
-            showHealText(playerElement, healAmount);
-
-            logBattleAction(`${player.name} defends and heals for ${healAmount} HP!`);
-
-            if (player === player1Data) {
-                player1Stats.healingAmount += healAmount;
+            const action = Math.random();
+            if (aiPlayer.mana >= 20 && action < 0.6) {
+                throwEmoji(aiPlayer, opponent, aiElement, opponentElement);
+            } else if (action < 0.8) {
+                attack(aiPlayer, opponent, aiElement, opponentElement);
             } else {
-                player2Stats.healingAmount += healAmount;
-            }
-
-            player.specialMoveCharge += 5;
-            if (player.specialMoveCharge > 100) player.specialMoveCharge = 100;
-        }
-
-        function specialMove(attacker, defender, attackerElement, defenderElement) {
-            const damage = Math.floor(attacker.maxDamage * 2);
-            defender.health = Math.max(0, defender.health - damage);
-
-            updateHealth(
-                defender === player1Data ? player1Health : player2Health,
-                defender === player1Data ? player1HPText : player2HPText,
-                defender.health,
-                defender.maxHealth
-            );
-
-            const specialMoveElement = document.createElement('div');
-            specialMoveElement.textContent = '💥';
-            specialMoveElement.className = 'special-move';
-            specialMoveElement.style.left = `${attackerElement.offsetLeft + attackerElement.offsetWidth / 2}px`;
-            specialMoveElement.style.top = `${attackerElement.offsetTop + attackerElement.offsetHeight / 2}px`;
-            gameArea.appendChild(specialMoveElement);
-
-            setTimeout(() => {
-                specialMoveElement.style.left = `${defenderElement.offsetLeft + defenderElement.offsetWidth / 2}px`;
-                specialMoveElement.style.top = `${defenderElement.offsetTop + defenderElement.offsetHeight / 2}px`;
-                setTimeout(() => specialMoveElement.remove(), 1000);
-            }, 50);
-
-            logBattleAction(`${attacker.name} casts a spell on ${defender.name} dealing ${damage} damage!`);
-
-            if (attacker === player1Data) {
-                player1Stats.damageDealt += damage;
-                player1Stats.skillUses++;
-                player1Stats.skillDamage['💥'] = (player1Stats.skillDamage['💥'] || 0) + damage;
-            } else {
-                player2Stats.damageDealt += damage;
-                player2Stats.skillUses++;
-                player2Stats.skillDamage['💥'] = (player2Stats.skillDamage['💥'] || 0) + damage;
-            }
-
-            attacker.specialMoveCharge = 0;
-
-            if (defender.health === 0) {
-                announceWinner(attacker, defender, attackerElement, defenderElement);
+                defend(aiPlayer, aiElement);
             }
         }
 
@@ -843,11 +792,23 @@
               ${winner.name} ${winnerStats.healingAmount} vs ${loserStats.healingAmount} ${loser.name}
             </div>`;
 
+            document.getElementById('emojiThrown').innerHTML = `
+            <div style="text-align: center;">
+              <span style="color: #FFFF00;">Items Thrown</span> <br>
+              ${winner.name} ${winnerStats.emojiThrown} vs ${loserStats.emojiThrown} ${loser.name}
+            </div>`;
+
+            document.getElementById('manaUsed').innerHTML = `
+            <div style="text-align: center;">
+              <span style="color: #18FFFF;">Mana Used</span> <br>
+              ${winner.name} ${winnerStats.manaUsed} vs ${loserStats.manaUsed} ${loser.name}
+            </div>`;
+
             setTimeout(() => {
                 winnerAnnouncement.style.display = 'flex';
             }, 2000);
 
-            logBattleAction(`${winner.name} wins the battle!`);
+            logBattleAction(`${winner.name} wins the duel!`);
         }
 
         function addSparkles(element) {
@@ -860,39 +821,24 @@
             }
         }
 
-        function aiAction(aiPlayer, opponent, aiElement, opponentElement) {
-            if (aiPlayer.health === 0 || opponent.health === 0) return;
-
-            const action = Math.random();
-            if (aiPlayer.specialMoveCharge >= 100 && action < 0.7) {
-                specialMove(aiPlayer, opponent, aiElement, opponentElement);
-            } else if (action < 0.6) {
-                attack(aiPlayer, opponent, aiElement, opponentElement);
-            } else if (action < 0.8) {
-                throwEmoji(aiPlayer, opponent, aiElement, opponentElement);
-            } else {
-                defend(aiPlayer, aiElement);
-            }
-        }
-
         function logBattleAction(message) {
             const logEntry = document.createElement('p');
             logEntry.className = 'mb-1';
-
-            if (message.includes('attacks')) {
+        
+            if (message.includes("doesn't have enough mana")) {
+                logEntry.style.color = '#FF0000'; // Red color for insufficient mana messages
+            } else if (message.includes('attacks')) {
                 logEntry.style.color = '#FAFAFA';
             } else if (message.includes('heals')) {
                 logEntry.style.color = '#76FF03';
             } else if (message.includes('throws')) {
                 logEntry.style.color = '#FFFF00';
-            } else if (message.includes('special move')) {
-                logEntry.style.color = '#18FFFF';
             } else if (message.includes('wins')) {
-                logEntry.style.color = '#F50057';
+                logEntry.classList.add('rainbow-text'); // Apply rainbow animation
             } else {
                 logEntry.style.color = '#ffffff';
             }
-
+        
             logEntry.textContent = message;
             battleLog.appendChild(logEntry);
             battleLog.scrollTop = battleLog.scrollHeight;
@@ -912,8 +858,8 @@
             characterSelection.style.display = 'flex';
             player1Data = null;
             player2Data = null;
-            player1Stats = { damageDealt: 0, healingAmount: 0, skillUses: 0, skillDamage: {} };
-            player2Stats = { damageDealt: 0, healingAmount: 0, skillUses: 0, skillDamage: {} };
+            player1Stats = { damageDealt: 0, healingAmount: 0, manaUsed: 0, emojiThrown: 0 };
+            player2Stats = { damageDealt: 0, healingAmount: 0, manaUsed: 0, emojiThrown: 0 };
             startGameBtn.disabled = true;
             updateSelectedCharacterNames();
         }
