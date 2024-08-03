@@ -276,6 +276,13 @@
                 opacity: 0;
             }
         }
+        @keyframes hover-jump {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .character-button:hover img {
+            animation: hover-jump 0.5s ease-in-out infinite;
+        }
 
     </style>
 </head>
@@ -472,9 +479,9 @@
         function createCharacterButton(url, index) {
             const button = document.createElement('div');
             button.innerHTML = `
-                <img src="${url}" alt="Character ${index + 1}" class="w-[100px] h-[100px] object-contain mb-2 rounded-lg shadow-lg wiggle">
+                <img src="${url}" alt="Character ${index + 1}" class="w-[100px] h-[100px] object-contain mb-2 rounded-lg shadow-lg transition-transform duration-300">
             `;
-            button.className = 'bg-gray-800 p-2 rounded-lg cursor-pointer transition duration-300 ease-in-out transform hover:scale-105';
+            button.className = 'character-button bg-gray-800 p-2 rounded-lg cursor-pointer transition duration-300 ease-in-out transform hover:scale-105';
             button.onclick = () => toggleCharacterSelection(url, index, button);
             return button;
         }
