@@ -285,10 +285,24 @@
         <h1 class="text-4xl font-bold mb-8 text-yellow-400 shadow-lg">Choose Your Fighters</h1>
         <h2 id="selectedCharacterNames" class="text-2xl mb-4 text-center"></h2>
         <div id="characterGrid" class="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4 mb-8"></div>
-        <div class="flex space-x-4 mb-4">
-            <button id="randomSelectBtn" class="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-full text-xl transition duration-300 ease-in-out transform hover:scale-105">Random Selection</button>
-            <button id="startGameBtn" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-full text-xl transition duration-300 ease-in-out transform hover:scale-105" disabled>Start Game</button>
-        </div>
+        <div class="flex space-x-8 mb-8">
+            <button id="randomSelectBtn" class="relative overflow-hidden bg-[#243044]/30 backdrop-blur-md text-blue-300 py-4 px-10 rounded-xl text-xl font-bold border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all duration-300 ease-in-out hover:shadow-[0_0_25px_rgba(59,130,246,0.8)] hover:text-white group">
+              <span class="relative z-10 transition-transform duration-300 group-hover:scale-110">Random Selection</span>
+              <span class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
+              <span class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></span>
+              <span class="absolute bottom-0 right-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></span>
+              <span class="absolute top-0 left-0 w-0.5 h-full bg-gradient-to-b from-transparent via-blue-500 to-transparent transform scale-y-0 group-hover:scale-y-100 transition-transform duration-500"></span>
+              <span class="absolute top-0 right-0 w-0.5 h-full bg-gradient-to-b from-transparent via-blue-500 to-transparent transform scale-y-0 group-hover:scale-y-100 transition-transform duration-500"></span>
+            </button>
+            <button id="startGameBtn" disabled class="relative overflow-hidden bg-[#243044]/30 backdrop-blur-md text-green-300 py-4 px-10 rounded-xl text-xl font-bold border border-green-500/50 shadow-[0_0_15px_rgba(34,197,94,0.5)] transition-all duration-300 ease-in-out hover:shadow-[0_0_25px_rgba(34,197,94,0.8)] hover:text-white group disabled:opacity-50 disabled:cursor-not-allowed">
+              <span class="relative z-10 transition-transform duration-300 group-hover:scale-110">Start Game</span>
+              <span class="absolute inset-0 bg-gradient-to-r from-green-600 to-emerald-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
+              <span class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-green-500 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></span>
+              <span class="absolute bottom-0 right-0 w-full h-0.5 bg-gradient-to-r from-transparent via-green-500 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></span>
+              <span class="absolute top-0 left-0 w-0.5 h-full bg-gradient-to-b from-transparent via-green-500 to-transparent transform scale-y-0 group-hover:scale-y-100 transition-transform duration-500"></span>
+              <span class="absolute top-0 right-0 w-0.5 h-full bg-gradient-to-b from-transparent via-green-500 to-transparent transform scale-y-0 group-hover:scale-y-100 transition-transform duration-500"></span>
+            </button>
+          </div>
         <div class="flex space-x-4 mb-4">
             <div>
                 <label for="p1MinDamage" class="block text-sm font-medium text-gray-300">P1 Min Damage:</label>
