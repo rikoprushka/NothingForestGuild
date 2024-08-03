@@ -50,10 +50,11 @@
         }
         @keyframes collapse {
             0% { transform: translateY(0) rotate(0deg); }
-            100% { transform: translateY(100px) rotate(90deg); }
+            100% { transform: translateY(50%) rotate(90deg); }
         }
-        .collapse {
+        .collapsed {
             animation: collapse 1s forwards;
+            filter: grayscale(100%);
         }
         .damage-text {
             position: absolute;
@@ -163,21 +164,21 @@
             animation: gradient-bg 15s ease infinite;
         }
         #battleLog {
-            background: rgba(255, 255, 255, 0.1); /* Semi-transparent white background */
-            border: 1px solid rgba(255, 255, 255, 0.2); /* Light border for the glass effect */
-            border-radius: 10px; /* Rounded corners for a smoother glass effect */
-            backdrop-filter: blur(10px); /* Blur effect for the glassmorphism */
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
         
         .top-bar-bg {
-            background-color: transparent; /* Changed to transparent */
-            backdrop-filter: none; /* Removed blur effect */
+            background-color: transparent;
+            backdrop-filter: none;
         }
         #elapsedTime {
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Added text shadow for better visibility */
-            background-color: transparent; /* Changed to transparent */
-            backdrop-filter: none; /* Removed blur effect */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            background-color: transparent;
+            backdrop-filter: none;
         }
         @keyframes rainbow-flow {
             0% { background-position: 0% 50%; }
@@ -245,6 +246,19 @@
             background-color: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(5px);
           }
+        #credits {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #a0aec0;
+        }
+        #credits a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+        #credits a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white">
@@ -315,6 +329,14 @@
             <button id="refreshBtn" class="bg-white/30 backdrop-blur-lg border border-white/10 text-white py-2 px-4 rounded-full text-sm shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
                 Back
             </button>
+        </div>
+        <div id="credits">
+            <p>All assets are copyrighted by
+            <a href="https://x.com/NothingJioo" target="_blank" rel="noopener noreferrer">@NothingJioo</a></p>
+            <a href="https://www.twitch.tv/jiooooooooooooooooooooooo" target="_blank" rel="noopener noreferrer">
+                twitch.tv/jiooooooooooooooooooooooo
+            </a>
+            <p>Created by Riko Prushka</p>
         </div>
     </div>
 
@@ -541,7 +563,7 @@
         function startGameLoop() {
             gameInterval = setInterval(() => {
                 aiAction(player1Data, player2Data, player1, player2);
-                aiAction(player2Data, player1Data, player2, player1);
+                aiAction(player2Data,player1Data, player2, player1);
                 updateElapsedTime();
             }, 1000);
         }
@@ -746,7 +768,7 @@
             winnerName.textContent = winner.name;
             winnerImage.src = winner.url;
             
-            loserElement.classList.add('collapse');
+            loserElement.classList.add('collapsed');
             loserElement.style.filter = 'grayscale(100%)';
             winnerElement.classList.add('jump');
             addSparkles(winnerElement);
@@ -823,10 +845,10 @@
 
         function resetGame() {
             clearInterval(gameInterval);
-            player1.classList.remove('jump', 'attack-right', 'hit', 'heal');
-            player2.classList.remove('jump', 'collapse', 'attack-left', 'hit', 'heal');
-            player1.style.filter = '';
-            player2.style.filter = '';
+            player1.classList.remove('jump', 'attack-right', 'hit', 'heal', 'collapsed');
+            player2.classList.remove('jump', 'attack-left', 'hit', 'heal', 'collapsed');
+            player1.style.transform = 'translateX(-50%) scaleX(-1)';
+            player2.style.transform = 'translateX(50%)';
             player1.querySelectorAll('.sparkle').forEach(s => s.remove());
             player2.querySelectorAll('.sparkle').forEach(s => s.remove());
             battleLog.innerHTML = '';
@@ -841,15 +863,13 @@
             updateSelectedCharacterNames();
         }
 
-        // Add this new function to handle the 'B' key press
-function handleKeyPress(event) {
-    if (event.key.toLowerCase() === 'b') {
-        window.location.href = 'index.html';
-    }
-}
+        function handleKeyPress(event) {
+            if (event.key.toLowerCase() === 'b') {
+                window.location.href = 'index.html';
+            }
+        }
 
-// Add event listener for key presses
-document.addEventListener('keydown', handleKeyPress);
+        document.addEventListener('keydown', handleKeyPress);
 
         randomSelectBtn.onclick = () => {
             if (!player1Data) {
