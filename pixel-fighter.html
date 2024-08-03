@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nothing Forest Guild Pixel Fighter</title>
+    <title>Nothing Forest Guild Battle Royale</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: "Press Start 2P", system-ui;
-            background-color: #1a202c;
             color: #e2e8f0;
+            padding-top: 50px;
         }
         @keyframes wiggle {
             0% { transform: rotate(0deg); }
@@ -153,9 +153,102 @@
         .heal {
             animation: heal 1s ease-in-out;
         }
+        @keyframes gradient-bg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animate-gradient-bg {
+            background-size: 200% 200%;
+            animation: gradient-bg 15s ease infinite;
+        }
+        #battleLog {
+            background: rgba(255, 255, 255, 0.1); /* Semi-transparent white background */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Light border for the glass effect */
+            border-radius: 10px; /* Rounded corners for a smoother glass effect */
+            backdrop-filter: blur(10px); /* Blur effect for the glassmorphism */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        
+        .top-bar-bg {
+            background-color: transparent; /* Changed to transparent */
+            backdrop-filter: none; /* Removed blur effect */
+        }
+        #elapsedTime {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Added text shadow for better visibility */
+            background-color: transparent; /* Changed to transparent */
+            backdrop-filter: none; /* Removed blur effect */
+        }
+        @keyframes rainbow-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .rainbow-bg {
+            background: linear-gradient(125deg, 
+                                        #B71C1C, 
+                                        #0f172a,
+                                        #880E4F, 
+                                        #0f172a,
+                                        #4A148C, 
+                                        #0f172a,
+                                        #311B92, 
+                                        #0f172a,
+                                        #1A237E, 
+                                        #0f172a,
+                                        #0D47A1, 
+                                        #0f172a,
+                                        #01579B, 
+                                        #0f172a,
+                                        #006064, 
+                                        #0f172a,
+                                        #004D40, 
+                                        #0f172a,
+                                        #1B5E20, 
+                                        #0f172a,
+                                        #33691E, 
+                                        #0f172a,
+                                        #E65100, 
+                                        #0f172a,
+                                        #BF360C,
+                                        #0f172a,
+                                        #B71C1C, 
+                                        #0f172a,
+                                        #880E4F, 
+                                        #0f172a,
+                                        #4A148C, 
+                                        #0f172a,
+                                        #311B92, 
+                                        #0f172a,
+                                        #1A237E, 
+                                        #0f172a,
+                                        #0D47A1, 
+                                        #0f172a,
+                                        #01579B, 
+                                        #0f172a,
+                                        #006064, 
+                                        #0f172a,
+                                        #004D40, 
+                                        #0f172a,
+                                        #1B5E20, 
+                                        #0f172a,
+                                        #33691E, 
+                                        #0f172a,
+                                        #E65100, 
+                                        #0f172a);
+
+            background-size: 10000% 10000%;
+            animation: rainbow-flow 720s ease infinite;
+        }
+        .top-bar-bg {
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+          }
     </style>
 </head>
 <body class="bg-gray-900 text-white">
+    <div class="fixed inset-0 z-[-1] rainbow-bg opacity-100"></div>
     <div id="characterSelection" class="fixed inset-0 bg-gradient-to-br from-gray-900 to-gray-800 flex flex-col items-center justify-center overflow-auto py-8">
         <h1 class="text-4xl font-bold mb-8 text-yellow-400 shadow-lg">Choose Your Fighters</h1>
         <h2 id="selectedCharacterNames" class="text-2xl mb-4 text-center"></h2>
@@ -194,20 +287,20 @@
         </div>
     </div>
 
-    <div id="gameArea" class="hidden fixed inset-0 bg-cover bg-center flex flex-col justify-between mx-auto" style="max-width: 1024px; max-height: 768px; aspect-ratio: 4/3; background-image: url('https://raw.githubusercontent.com/rikoprushka/NothingForestGuild/main/bg/bg.png');">
-        <div class="h-20 bg-black bg-opacity-50 flex justify-between items-center px-4">
+    <div id="gameArea" class="hidden fixed inset-0 flex flex-col justify-between mx-auto pt-[50px]" style="width: 1280px; height: 720px; background-size: cover; background-position: center;">
+        <div class="top-bar-bg bg-gray-700 h-24 flex justify-between items-center px-4 rounded-[20px]" style="background: none;">
             <div class="flex flex-col items-start">
                 <div id="player1Name" class="text-sm mb-1"></div>
-                <div id="player1HealthContainer" class="w-[300px] h-8 bg-gray-700 rounded-full overflow-hidden relative">
-                    <div id="player1Health" class="health-bar h-full bg-red-600"></div>
+                <div id="player1HealthContainer" class="w-96 h-10 bg-gray-700 rounded-full overflow-hidden relative">
+                    <div id="player1Health" class="health-bar h-full bg-gradient-to-r from-red-800 to-red-600"></div>
                     <div id="player1HPText" class="absolute inset-0 flex items-center justify-center text-white text-sm"></div>
                 </div>
             </div>
             <div id="elapsedTime" class="text-xl font-bold text-yellow-400"></div>
             <div class="flex flex-col items-end">
                 <div id="player2Name" class="text-sm mb-1"></div>
-                <div id="player2HealthContainer" class="w-[300px] h-8 bg-gray-700 rounded-full overflow-hidden relative">
-                    <div id="player2Health" class="health-bar h-full bg-red-600 float-right"></div>
+                <div id="player2HealthContainer" class="w-96 h-10 bg-gray-700 rounded-full overflow-hidden relative">
+                    <div id="player2Health" class="health-bar h-full bg-gradient-to-l from-red-800 to-red-600 float-right"></div>
                     <div id="player2HPText" class="absolute inset-0 flex items-center justify-center text-white text-sm"></div>
                 </div>
             </div>
@@ -217,9 +310,11 @@
             <div id="player1" class="character"></div>
             <div id="player2" class="character"></div>
         </div>
-        <div id="battleLog" class="h-32 bg-black bg-opacity-50 text-white p-4 overflow-y-auto text-xs"></div>
+        <div id="battleLog" class="bg-transparent border border-transparent text-white p-4 overflow-y-auto text-xs flex flex-col items-center h-[200px]"></div>
         <div class="p-4 flex justify-center">
-            <button id="refreshBtn" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-full text-sm transition duration-300 ease-in-out transform hover:scale-105">Back</button>
+            <button id="refreshBtn" class="bg-white/30 backdrop-blur-lg border border-white/10 text-white py-2 px-4 rounded-full text-sm shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                Back
+            </button>
         </div>
     </div>
 
@@ -401,7 +496,7 @@
                 maxHealth: p2MaxHP, 
                 name: getCharacterName(player2Data.url),
                 minDamage: p2MinDamage,
-maxDamage: p2MaxDamage,
+                maxDamage: p2MaxDamage,
                 specialMoveCharge: 0
             };
 
@@ -481,7 +576,6 @@ maxDamage: p2MaxDamage,
 
             logBattleAction(`${attacker.name} attacks ${defender.name} for ${damage} damage!`);
 
-            // Update stats
             if (attacker === player1Data) {
                 player1Stats.damageDealt += damage;
             } else {
@@ -508,7 +602,7 @@ maxDamage: p2MaxDamage,
 
         function showHealText(element, healAmount) {
             const healText = document.createElement('div');
-            healText.textContent = 'HEAL!!';
+            healText.textContent = `+${healAmount}`;
             healText.className = 'heal-text';
             healText.style.left = `${element.offsetLeft + element.offsetWidth / 2}px`;
             healText.style.top = `${element.offsetTop + element.offsetHeight / 4}px`;
@@ -558,7 +652,6 @@ maxDamage: p2MaxDamage,
 
             logBattleAction(`${attacker.name} throws ${emoji} at ${defender.name} for ${damage} magical damage!`);
 
-            // Update stats
             if (attacker === player1Data) {
                 player1Stats.damageDealt += damage;
                 player1Stats.skillUses++;
@@ -577,7 +670,7 @@ maxDamage: p2MaxDamage,
             }
         }
 
-        function defend(player) {
+        function defend(player, playerElement) {
             const healAmount = Math.floor(player.maxHealth * 0.05);
             player.health = Math.min(player.maxHealth, player.health + healAmount);
 
@@ -588,8 +681,6 @@ maxDamage: p2MaxDamage,
                 player.maxHealth
             );
 
-            // Add healing effect
-            const playerElement = player === player1Data ? player1 : player2;
             playerElement.classList.add('heal');
             setTimeout(() => playerElement.classList.remove('heal'), 1000);
 
@@ -597,7 +688,6 @@ maxDamage: p2MaxDamage,
 
             logBattleAction(`${player.name} defends and heals for ${healAmount} HP!`);
 
-            // Update stats
             if (player === player1Data) {
                 player1Stats.healingAmount += healAmount;
             } else {
@@ -634,7 +724,6 @@ maxDamage: p2MaxDamage,
 
             logBattleAction(`${attacker.name} uses a special move on ${defender.name} for ${damage} damage!`);
 
-            // Update stats
             if (attacker === player1Data) {
                 player1Stats.damageDealt += damage;
                 player1Stats.skillUses++;
@@ -662,7 +751,6 @@ maxDamage: p2MaxDamage,
             winnerElement.classList.add('jump');
             addSparkles(winnerElement);
 
-            // Update battle summary
             const winnerStats = winner === player1Data ? player1Stats : player2Stats;
             const loserStats = winner === player1Data ? player2Stats : player1Stats;
 
@@ -672,12 +760,11 @@ maxDamage: p2MaxDamage,
               ${winner.name} ${winnerStats.damageDealt} vs ${loserStats.damageDealt} ${loser.name}
             </div>`;
 
-          document.getElementById('healingAmount').innerHTML = `
+            document.getElementById('healingAmount').innerHTML = `
             <div style="text-align: center;">
-              <span style="color: green;">Healing Amount</span> <br> 
+              <span style="color: #76FF03;">Healing Amount</span> <br> 
               ${winner.name} ${winnerStats.healingAmount} vs ${loserStats.healingAmount} ${loser.name}
             </div>`;
-
 
             setTimeout(() => {
                 winnerAnnouncement.style.display = 'flex';
@@ -707,14 +794,29 @@ maxDamage: p2MaxDamage,
             } else if (action < 0.8) {
                 throwEmoji(aiPlayer, opponent, aiElement, opponentElement);
             } else {
-                defend(aiPlayer);
+                defend(aiPlayer, aiElement);
             }
         }
 
         function logBattleAction(message) {
             const logEntry = document.createElement('p');
-            logEntry.textContent = message;
             logEntry.className = 'mb-1';
+
+            if (message.includes('attacks')) {
+                logEntry.style.color = '#FAFAFA';
+            } else if (message.includes('heals')) {
+                logEntry.style.color = '#76FF03';
+            } else if (message.includes('throws')) {
+                logEntry.style.color = '#FFFF00';
+            } else if (message.includes('special move')) {
+                logEntry.style.color = '#18FFFF';
+            } else if (message.includes('wins')) {
+                logEntry.style.color = '#F50057';
+            } else {
+                logEntry.style.color = '#ffffff';
+            }
+
+            logEntry.textContent = message;
             battleLog.appendChild(logEntry);
             battleLog.scrollTop = battleLog.scrollHeight;
         }

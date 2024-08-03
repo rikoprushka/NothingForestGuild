@@ -98,6 +98,7 @@
             <p>Click/Tap: Toggle Link</p>
             <p>H/Spacebar: Toggle This Menu</p>
             <p>B: Go to Battle Royale</p>
+            <p>F: Go to Pixel Fighter</p>
             <p>X: Go to @NothingJioo</p>
             <p>T: Go to Nothing Forest</p>
             <br>
@@ -115,6 +116,7 @@
             <button class="mobileButton" id="soundBtn">Sound</button>
             <button class="mobileButton" id="helpBtn">Help</button>
             <button class="mobileButton" id="battleRoyaleBtn">Battle Royale</button>
+            <button class="mobileButton" id="pixelFighterBtn">Pixel Fighter</button>
         </div>
     </div>
     <script>
@@ -201,6 +203,10 @@
 
         document.getElementById('battleRoyaleBtn').addEventListener('click', () => {
             window.location.href = 'battle-royale.html';
+        });
+
+        document.getElementById('pixelFighterBtn').addEventListener('click', () => {
+            window.location.href = 'pixel-fighter.html';
         });
 
         function getRandomColor() {
@@ -307,6 +313,12 @@
                 case 'ิ':
                 case 'ฺ':
                     window.location.href = 'battle-royale.html';
+                    break;
+                case 'f':
+                case 'F':
+                case 'ด':
+                case 'โ':
+                    window.location.href = 'pixel-fighter.html';
                     break;
             }
         }
