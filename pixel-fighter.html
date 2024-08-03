@@ -232,6 +232,46 @@
         .rainbow-text {
             animation: rainbow 4s linear infinite;
         }
+        #howToPlayMenu {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1000;
+            max-width: 80%;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+
+        #howToPlayMenu h2 {
+            color: #FFD700;
+            margin-bottom: 15px;
+        }
+
+        #howToPlayMenu ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #howToPlayMenu li {
+            margin-bottom: 10px;
+        }
+
+        #howToPlayMenu .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white">
@@ -352,6 +392,19 @@
                 <p id="manaUsed"></p>
             </div>
         </div>
+    </div>
+
+    <div id="howToPlayMenu">
+        <button class="close-btn">&times;</button>
+        <h2>How to Play</h2>
+        <ul>
+            <li>Select two characters to start the game.</li>
+            <li>Watch as the characters automatically battle each other.</li>
+            <li>Characters can attack, defend, or throw special items.</li>
+            <li>The battle continues until one character's health reaches zero.</li>
+            <li>Press 'B' to go to Screensaver.</li>
+            <li>Press 'H' to toggle this How to Play menu.</li>
+        </ul>
     </div>
 
     <script>
@@ -869,6 +922,24 @@
                 window.location.href = 'index.html';
             }
         }
+
+        const howToPlayMenu = document.getElementById('howToPlayMenu');
+        const closeHowToPlayBtn = howToPlayMenu.querySelector('.close-btn');
+
+        function toggleHowToPlay() {
+            howToPlayMenu.style.display = howToPlayMenu.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function handleKeyPress(event) {
+            if (event.key.toLowerCase() === 'b') {
+                window.location.href = 'index.html';
+            } else if (event.key.toLowerCase() === 'h') {
+                toggleHowToPlay();
+            }
+        }
+
+        document.addEventListener('keydown', handleKeyPress);
+        closeHowToPlayBtn.addEventListener('click', toggleHowToPlay);
 
         document.addEventListener('keydown', handleKeyPress);
 
