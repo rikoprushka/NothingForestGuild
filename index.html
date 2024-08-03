@@ -31,13 +31,13 @@
             max-width: 100%;
             max-height: 100%;
         }
-        #twitchLink, #howToPlay { 
-            position: absolute; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            background-color: rgba(0,0,0,0.7); 
-            padding: 10px; 
-            border-radius: 5px; 
+        #twitchLink, #howToPlay {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0,0,0,0.7);
+            padding: 10px;
+            border-radius: 5px;
             text-align: center;
             transition: opacity 0.3s ease;
             color: #fff;
@@ -51,9 +51,9 @@
         #twitchLink a, #howToPlay a { color: #9146FF; text-decoration: none; }
         #twitchLink a:hover, #howToPlay a:hover { text-decoration: underline; }
         .hidden { opacity: 0; pointer-events: none; }
-        .link-clicked { 
+        .link-clicked {
             color: #ff00ea;
-            text-decoration: none; 
+            text-decoration: none;
             font-weight: bold;
         }
         #mobileControls {
@@ -138,10 +138,10 @@
             const containerWidth = container.clientWidth;
             const containerHeight = container.clientHeight;
             const scale = Math.min(containerWidth / defaultWidth, containerHeight / defaultHeight);
-            
+
             canvas.width = defaultWidth * scale;
             canvas.height = defaultHeight * scale;
-            
+
             logo.width = nativeCharacterSize * scale;
             logo.height = nativeCharacterSize * scale;
             logo.x = Math.min(Math.max(logo.x, 0), canvas.width - logo.width);
@@ -217,7 +217,7 @@
             ctx.save();
             ctx.fillStyle = logo.color;
             ctx.fillRect(logo.x, logo.y, logo.width, logo.height);
-            
+
             if (logo.flipped) {
                 ctx.translate(logo.x + logo.width, logo.y);
                 ctx.scale(-1, 1);

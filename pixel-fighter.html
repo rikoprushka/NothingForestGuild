@@ -186,58 +186,58 @@
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        
+
         .rainbow-bg {
-            background: linear-gradient(125deg, 
-                                        #B71C1C, 
+            background: linear-gradient(125deg,
+                                        #B71C1C,
                                         #0f172a,
-                                        #880E4F, 
+                                        #880E4F,
                                         #0f172a,
-                                        #4A148C, 
+                                        #4A148C,
                                         #0f172a,
-                                        #311B92, 
+                                        #311B92,
                                         #0f172a,
-                                        #1A237E, 
+                                        #1A237E,
                                         #0f172a,
-                                        #0D47A1, 
+                                        #0D47A1,
                                         #0f172a,
-                                        #01579B, 
+                                        #01579B,
                                         #0f172a,
-                                        #006064, 
+                                        #006064,
                                         #0f172a,
-                                        #004D40, 
+                                        #004D40,
                                         #0f172a,
-                                        #1B5E20, 
+                                        #1B5E20,
                                         #0f172a,
-                                        #33691E, 
+                                        #33691E,
                                         #0f172a,
-                                        #E65100, 
+                                        #E65100,
                                         #0f172a,
                                         #BF360C,
                                         #0f172a,
-                                        #B71C1C, 
+                                        #B71C1C,
                                         #0f172a,
-                                        #880E4F, 
+                                        #880E4F,
                                         #0f172a,
-                                        #4A148C, 
+                                        #4A148C,
                                         #0f172a,
-                                        #311B92, 
+                                        #311B92,
                                         #0f172a,
-                                        #1A237E, 
+                                        #1A237E,
                                         #0f172a,
-                                        #0D47A1, 
+                                        #0D47A1,
                                         #0f172a,
-                                        #01579B, 
+                                        #01579B,
                                         #0f172a,
-                                        #006064, 
+                                        #006064,
                                         #0f172a,
-                                        #004D40, 
+                                        #004D40,
                                         #0f172a,
-                                        #1B5E20, 
+                                        #1B5E20,
                                         #0f172a,
-                                        #33691E, 
+                                        #33691E,
                                         #0f172a,
-                                        #E65100, 
+                                        #E65100,
                                         #0f172a);
 
             background-size: 10000% 10000%;
@@ -262,12 +262,12 @@
             animation: none;
             transition: text-decoration 0.3s ease-in-out;
         }
-        
+
         #credits a:hover {
             text-decoration: underline;
             animation: smoothBlink 1.5s linear infinite;
         }
-        
+
         @keyframes smoothBlink {
             0%, 100% {
                 opacity: 1;
@@ -276,7 +276,7 @@
                 opacity: 0;
             }
         }
-        
+
     </style>
 </head>
 <body class="bg-gray-900 text-white">
@@ -521,19 +521,19 @@
             const p1MaxHP = parseInt(p1MaxHPInput.value);
             const p2MaxHP = parseInt(p2MaxHPInput.value);
 
-            player1Data = { 
-                ...player1Data, 
-                health: p1MaxHP, 
-                maxHealth: p1MaxHP, 
+            player1Data = {
+                ...player1Data,
+                health: p1MaxHP,
+                maxHealth: p1MaxHP,
                 name: getCharacterName(player1Data.url),
                 minDamage: p1MinDamage,
                 maxDamage: p1MaxDamage,
                 specialMoveCharge: 0
             };
-            player2Data = { 
-                ...player2Data, 
-                health: p2MaxHP, 
-                maxHealth: p2MaxHP, 
+            player2Data = {
+                ...player2Data,
+                health: p2MaxHP,
+                maxHealth: p2MaxHP,
                 name: getCharacterName(player2Data.url),
                 minDamage: p2MinDamage,
                 maxDamage: p2MaxDamage,
@@ -785,7 +785,7 @@
             clearInterval(gameInterval);
             winnerName.textContent = winner.name;
             winnerImage.src = winner.url;
-            
+
             loserElement.classList.add('collapsed');
             loserElement.style.filter = 'grayscale(100%)';
             winnerElement.classList.add('jump');
@@ -796,13 +796,13 @@
 
             document.getElementById('damageDealt').innerHTML = `
             <div style="text-align: center;">
-              <span style="color: red;">Damage Dealt</span> <br> 
+              <span style="color: red;">Damage Dealt</span> <br>
               ${winner.name} ${winnerStats.damageDealt} vs ${loserStats.damageDealt} ${loser.name}
             </div>`;
 
             document.getElementById('healingAmount').innerHTML = `
             <div style="text-align: center;">
-              <span style="color: #76FF03;">Healing Amount</span> <br> 
+              <span style="color: #76FF03;">Healing Amount</span> <br>
               ${winner.name} ${winnerStats.healingAmount} vs ${loserStats.healingAmount} ${loser.name}
             </div>`;
 

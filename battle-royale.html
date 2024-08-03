@@ -337,12 +337,12 @@
             animation: none;
             transition: text-decoration 0.3s ease-in-out;
         }
-        
+
         #credits a:hover {
             text-decoration: underline;
             animation: smoothBlink 1.5s linear infinite;
         }
-        
+
         @keyframes smoothBlink {
             0%, 100% {
                 opacity: 1;
@@ -351,7 +351,7 @@
                 opacity: 0;
             }
         }
-        
+
     </style>
 </head>
 <body>
@@ -474,7 +474,7 @@
             hideWinningMessage();
             startCountdown();
         }
-        
+
         function startCountdown() {
             const countdownElement = document.getElementById('countdown');
             countdownElement.style.display = 'block';
@@ -492,12 +492,12 @@
                 }
             }, 1000);
         }
-        
+
         function startGame() {
             gameLoopId = requestAnimationFrame(gameLoop);
             moveInterval = setInterval(moveCharacters, MOVEMENT_INTERVAL);
         }
-    
+
         function renderCharacters() {
             const gameContainer = document.getElementById('gameContainer');
             gameContainer.innerHTML = '<div id="winningMessage"></div><div id="countdown"></div><div id="fireworks"></div><div id="winnerFlood"></div>';
@@ -520,13 +520,13 @@
             });
             updateStats();
         }
-    
+
         function moveCharacters() {
             characters.forEach(char => {
                 if (!char.isAlive) return;
                 const newX = Math.max(0, Math.min(GAME_WIDTH - CHARACTER_SIZE, Math.random() * GAME_WIDTH));
                 const newY = Math.max(0, Math.min(GAME_HEIGHT - CHARACTER_SIZE, Math.random() * GAME_HEIGHT));
-                
+
                 if (newX < char.x) {
                     char.element.classList.remove('flip-right');
                     char.element.classList.add('flip-left');
@@ -534,22 +534,22 @@
                     char.element.classList.remove('flip-left');
                     char.element.classList.add('flip-right');
                 }
-                
+
                 char.x = newX;
                 char.y = newY;
                 char.element.style.left = `${char.x}px`;
                 char.element.style.top = `${char.y}px`;
             });
         }
-    
+
         function attackCharacters() {
             const aliveCharacters = characters.filter(char => char.isAlive);
             aliveCharacters.sort(() => Math.random() - 0.5);
-    
+
             aliveCharacters.forEach((attacker) => {
                 const potentialTargets = aliveCharacters.filter(char => char !== attacker);
                 potentialTargets.sort(() => Math.random() - 0.5);
-    
+
                 for (const target of potentialTargets) {
                     const distance = Math.hypot(attacker.x - target.x, attacker.y - target.y);
                     if (distance < ATTACK_RANGE && Date.now() - attacker.lastAttackTime > ATTACK_COOLDOWN) {
@@ -561,19 +561,19 @@
                 }
             });
         }
-    
+
         function hitCharacter(attacker, target, damage) {
             target.hp -= damage;
             attacker.totalDamage += damage;
-    
+
             const hitEffect = target.element.querySelector('.hit-effect');
             const damageNumber = target.element.querySelector('.damage-number');
             const hpBarFill = target.element.querySelector('.hp-bar-fill');
             const hpText = target.element.querySelector('.hp-text');
-    
+
             hitEffect.style.opacity = '1';
             setTimeout(() => { hitEffect.style.opacity = '0'; }, 200);
-    
+
             damageNumber.textContent = damage;
             damageNumber.style.opacity = '1';
             damageNumber.style.top = '-40px';
@@ -581,10 +581,10 @@
                 damageNumber.style.opacity = '0';
                 damageNumber.style.top = '-30px';
             }, 500);
-    
+
             hpBarFill.style.width = `${(target.hp / INITIAL_HP) * 100}%`;
             hpText.textContent = `${Math.max(0, target.hp)}/${INITIAL_HP}`;
-    
+
             if (attacker.element) {
                 if (attacker.x < target.x) {
                     attacker.element.classList.remove('flip-left');
@@ -599,9 +599,9 @@
             setTimeout(() => {
                 target.element.classList.remove('shaking');
             }, 500);
-    
+
             logAttack(attacker, target, damage);
-    
+
             if (target.hp <= 0) {
                 target.isAlive = false;
                 logKill(attacker, target);
@@ -613,7 +613,7 @@
             }
             updateStats();
         }
-    
+
         function eliminateCharacter(character) {
             character.element.classList.add('burning');
             let opacity = 1;
@@ -627,56 +627,56 @@
                 }
             }, 50);
         }
-    
+
         function playerAttack(target) {
             if (gameState === 'playing' && target.isAlive) {
                 hitCharacter({ name: 'Player', fullName: 'Player' }, target, 1);
                 logMessage('<span class="player-action">Player attacked ' + target.fullName +' for 1 damage</span>');
             }
         }
-    
+
         function dropHealingItem() {
             if (gameState !== 'playing') return;
             const aliveCharacters = characters.filter(char => char.isAlive);
             if (aliveCharacters.length === 0) return;
-    
+
             const luckyCharacter = aliveCharacters[Math.floor(Math.random() * aliveCharacters.length)];
             const healAmount = Math.floor(Math.random() * 99) + 1;
             luckyCharacter.hp = Math.min(INITIAL_HP, luckyCharacter.hp + healAmount);
-    
+
             const hpBarFill = luckyCharacter.element.querySelector('.hp-bar-fill');
             const hpText = luckyCharacter.element.querySelector('.hp-text');
             hpBarFill.style.width = `${(luckyCharacter.hp / INITIAL_HP) * 100}%`;
             hpText.textContent = `${luckyCharacter.hp}/${INITIAL_HP}`;
-    
+
             const healingItem = document.createElement('div');
             healingItem.className = 'item';
             healingItem.textContent = '💚';
             healingItem.style.left = `${luckyCharacter.x}px`;
             healingItem.style.top = `${luckyCharacter.y - 30}px`;
             document.getElementById('gameContainer').appendChild(healingItem);
-    
+
             setTimeout(() => healingItem.remove(), 2000);
-    
+
             logMessage(`💚 ${luckyCharacter.fullName} found a healing item<br>and restored ${healAmount} HP!`);
             logMessage('<span class="player-action">Player dropped a healing item</span>');
             updateStats();
         }
-    
+
         function dropBomb() {
             if (gameState !== 'playing') return;
             const aliveCharacters = characters.filter(char => char.isAlive);
             if (aliveCharacters.length === 0) return;
-    
+
             const damage = Math.floor(Math.random() * 30) + 20;
-            
+
             const bomb = document.createElement('div');
             bomb.className = 'item';
             bomb.textContent = '💣';
             bomb.style.left = `${GAME_WIDTH / 2}px`;
             bomb.style.top = `${GAME_HEIGHT / 2}px`;
             document.getElementById('gameContainer').appendChild(bomb);
-    
+
             setTimeout(() => {
                 bomb.remove();
                 aliveCharacters.forEach(char => {
@@ -684,11 +684,11 @@
                 });
                 logMessage(`💥 Bomb exploded!<br>All characters took ${damage} damage!`);
             }, 2000);
-    
+
             logMessage(`💣 A bomb has been dropped!<br>It will explode in 2 seconds!`);
             logMessage('<span class="player-action">Player dropped a bomb</span>');
         }
-    
+
         function changeMovementSpeed(factor) {
             MOVEMENT_INTERVAL = Math.max(500, Math.min(5000, MOVEMENT_INTERVAL / factor));
             clearInterval(moveInterval);
@@ -696,7 +696,7 @@
             logMessage(`🏃 Movement speed ${factor > 1 ? 'increased' : 'decreased'}!`);
             logMessage('<span class="player-action">Player changed movement speed</span>');
         }
-    
+
         function logMessage(message) {
             const logContainer = document.getElementById('logContainer');
             const logEntry = document.createElement('div');
@@ -704,15 +704,15 @@
             logContainer.appendChild(logEntry);
             logContainer.scrollTop = logContainer.scrollHeight;
         }
-    
+
         function logAttack(attacker, target, damage) {
             logMessage(`<span class="character-name-log">${attacker.fullName}</span> ⚔️ <span class="character-name-log">${target.fullName}</span> <br>for ${damage} damage!`);
-        }        
+        }
 
         function logKill(attacker, target) {
             logMessage(`<span class="kill-message">☠️ <span class="character-name-log">${attacker.fullName}</span> eliminated <span class="character-name-log">${target.fullName}</span>!</span>`);
         }
-    
+
         function logKillingSpree(character) {
             const spreeMessages = [
                 "x2 Double Kill!!<br>⭐⭐",
@@ -737,7 +737,7 @@
     function updateStats() {
         const statsContainer = document.getElementById('statsContainer');
         statsContainer.innerHTML = '<h3>Alive</h3>';
-        
+
         characters.filter(char => char.isAlive).forEach(char => {
             const statEntry = createStatEntry(char, false);
             statsContainer.appendChild(statEntry);
