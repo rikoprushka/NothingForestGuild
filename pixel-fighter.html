@@ -130,12 +130,13 @@
         }
         .emoji {
             position: absolute;
-            font-size: 24px;
-            animation: float-emoji 1s forwards;
+            font-size: 32px;
+            transition: all 2s ease-in-out;
+            z-index: 1000;
         }
         @keyframes float-emoji {
-            0% { transform: translate(0, 0); opacity: 1; }
-            100% { transform: translate(100px, -50px); opacity: 0; }
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(200px, -100px) scale(2); opacity: 0; } /* Increased travel distance and added scale */
         }
         .special-move {
             position: absolute;
@@ -607,7 +608,7 @@
                 aiAction(player1Data, player2Data, player1, player2);
                 aiAction(player2Data,player1Data, player2, player1);
                 updateElapsedTime();
-            }, 1000);
+            }, 2000);
         }
 
         function updateHealth(healthBar, healthText, health, maxHealth) {
@@ -688,9 +689,9 @@
         }
 
         function throwEmoji(attacker, defender, attackerElement, defenderElement) {
-            const emojis = ['🔥', '⚡', '❄️', '🌪️', '🌊', '🌈', '💫', '🎇'];
+            const emojis = ['🧲', '🧸', '🧻', '💣', '🐬', '📱', '👟', '🩲', '🌵', '💩', '⚽', '🏀', '🎮', '🍌', '🍕', '🍰', '🥚', '🦴', '🎤', '📔', '🖱️', '💸', '🐍', '✝️'];
             const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-            const damage = Math.floor((Math.random() * (attacker.maxDamage - attacker.minDamage + 1) + attacker.minDamage) * 2);
+            const damage = Math.floor((Math.random() * (attacker.maxDamage - attacker.minDamage + 1) + attacker.minDamage) * 4);
 
             defender.health = Math.max(0, defender.health - damage);
 
@@ -704,17 +705,29 @@
             const emojiElement = document.createElement('div');
             emojiElement.textContent = emoji;
             emojiElement.className = 'emoji';
-            emojiElement.style.left = `${attackerElement.offsetLeft + attackerElement.offsetWidth / 2}px`;
-            emojiElement.style.top = `${attackerElement.offsetTop + attackerElement.offsetHeight / 2}px`;
+            
+            // Set initial position (at the attacker)
+            const startLeft = attackerElement.offsetLeft + attackerElement.offsetWidth / 2;
+            const startTop = attackerElement.offsetTop + attackerElement.offsetHeight / 2;
+            emojiElement.style.left = `${startLeft}px`;
+            emojiElement.style.top = `${startTop}px`;
+            
             gameArea.appendChild(emojiElement);
 
-            setTimeout(() => {
-                emojiElement.style.left = `${defenderElement.offsetLeft + defenderElement.offsetWidth / 2}px`;
-                emojiElement.style.top = `${defenderElement.offsetTop + defenderElement.offsetHeight / 2}px`;
-                setTimeout(() => emojiElement.remove(), 1000);
-            }, 50);
+            // Trigger reflow to ensure the initial state is rendered
+            emojiElement.offsetHeight;
 
-            logBattleAction(`${attacker.name} throws ${emoji} at ${defender.name} for ${damage} magical damage!`);
+            // Set final position (at the defender)
+            const endLeft = defenderElement.offsetLeft + defenderElement.offsetWidth / 2;
+            const endTop = defenderElement.offsetTop + defenderElement.offsetHeight / 2;
+            emojiElement.style.left = `${endLeft}px`;
+            emojiElement.style.top = `${endTop}px`;
+            emojiElement.style.transform = 'scale(2)';
+
+            // Remove the emoji after animation completes
+            setTimeout(() => emojiElement.remove(), 2500);
+
+            logBattleAction(`${attacker.name} throws ${emoji} at ${defender.name} for ${damage} critical damage!`);
 
             if (attacker === player1Data) {
                 player1Stats.damageDealt += damage;
@@ -774,7 +787,7 @@
             );
 
             const specialMoveElement = document.createElement('div');
-            specialMoveElement.textContent = '🌟';
+            specialMoveElement.textContent = '💥';
             specialMoveElement.className = 'special-move';
             specialMoveElement.style.left = `${attackerElement.offsetLeft + attackerElement.offsetWidth / 2}px`;
             specialMoveElement.style.top = `${attackerElement.offsetTop + attackerElement.offsetHeight / 2}px`;
@@ -786,16 +799,16 @@
                 setTimeout(() => specialMoveElement.remove(), 1000);
             }, 50);
 
-            logBattleAction(`${attacker.name} uses a special move on ${defender.name} for ${damage} damage!`);
+            logBattleAction(`${attacker.name} casts a spell on ${defender.name} dealing ${damage} damage!`);
 
             if (attacker === player1Data) {
                 player1Stats.damageDealt += damage;
                 player1Stats.skillUses++;
-                player1Stats.skillDamage['🌟'] = (player1Stats.skillDamage['🌟'] || 0) + damage;
+                player1Stats.skillDamage['💥'] = (player1Stats.skillDamage['💥'] || 0) + damage;
             } else {
                 player2Stats.damageDealt += damage;
                 player2Stats.skillUses++;
-                player2Stats.skillDamage['🌟'] = (player2Stats.skillDamage['🌟'] || 0) + damage;
+                player2Stats.skillDamage['💥'] = (player2Stats.skillDamage['💥'] || 0) + damage;
             }
 
             attacker.specialMoveCharge = 0;
