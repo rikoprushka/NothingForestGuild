@@ -283,6 +283,9 @@
         .character-button:hover img {
             animation: hover-jump 0.5s ease-in-out infinite;
         }
+        .character-button.selected img {
+            animation: hover-jump 0.5s ease-in-out infinite;
+        }
 
     </style>
 </head>
@@ -493,11 +496,11 @@
         function toggleCharacterSelection(url, index, button) {
             if (player1Data && player1Data.index === index) {
                 player1Data = null;
-                button.classList.remove('ring-4', 'ring-blue-500', 'blink');
+                button.classList.remove('ring-4', 'ring-blue-500', 'selected');
                 button.querySelector('div')?.remove();
             } else if (player2Data && player2Data.index === index) {
                 player2Data = null;
-                button.classList.remove('ring-4', 'ring-red-500', 'blink');
+                button.classList.remove('ring-4', 'ring-red-500', 'selected');
                 button.querySelector('div')?.remove();
             } else if (!player1Data) {
                 player1Data = { url, index };
@@ -511,7 +514,7 @@
         }
 
         function updateCharacterSelection(player, index, button) {
-            button.classList.add(player === 'P1' ? 'ring-4' : 'ring-4', player === 'P1' ? 'ring-blue-500' : 'ring-red-500', 'blink');
+            button.classList.add(player === 'P1' ? 'ring-4' : 'ring-4', player === 'P1' ? 'ring-blue-500' : 'ring-red-500', 'selected');
             const label = document.createElement('div');
             label.textContent = player;
             label.className = `absolute top-0 left-0 bg-${player === 'P1' ? 'blue' : 'red'}-500 text-white px-2 py-1 text-xs rounded-br`;
