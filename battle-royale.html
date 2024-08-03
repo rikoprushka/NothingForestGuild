@@ -322,6 +322,36 @@
             color: rgba(255, 255, 255, 0.3);
             white-space: nowrap;
         }
+        #credits {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #F5F5F4;
+        }
+        #credits a {
+            color: #F5F5F4;
+            text-decoration: none;
+        }
+        #credits a {
+            text-decoration: none;
+            animation: none;
+            transition: text-decoration 0.3s ease-in-out;
+        }
+        
+        #credits a:hover {
+            text-decoration: underline;
+            animation: smoothBlink 1.5s linear infinite;
+        }
+        
+        @keyframes smoothBlink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+        
     </style>
 </head>
 <body>
