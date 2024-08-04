@@ -811,7 +811,7 @@
             if (aiPlayer.health === 0 || opponent.health === 0) return;
 
             const action = Math.random();
-            if (aiPlayer.mana >= 20 && action < 0.6) {
+            if (aiPlayer.mana >= 24 && action < 0.6) {
                 throwEmoji(aiPlayer, opponent, aiElement, opponentElement);
             } else if (action < 0.8) {
                 attack(aiPlayer, opponent, aiElement, opponentElement);
