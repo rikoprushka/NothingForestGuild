@@ -1,19 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-1GEV6TXS4D"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-1GEV6TXS4D');
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nothing Forest Pixel</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             margin: 0;
@@ -60,11 +55,7 @@
         #twitchLink a, #howToPlay a { color: #9146FF; text-decoration: none; }
         #twitchLink a:hover, #howToPlay a:hover { text-decoration: underline; }
         .hidden { opacity: 0; pointer-events: none; }
-        .link-clicked {
-            color: #ff00ea;
-            text-decoration: none;
-            font-weight: bold;
-        }
+        .link-clicked { color: #ff00ea; text-decoration: none; font-weight: bold; }
         #mobileControls {
             position: absolute;
             bottom: 60px;
@@ -92,32 +83,19 @@
             #howToPlay { font-size: 10px; }
             .mobileButton { font-size: 14px; }
         }
+        @layer utilities {
+            .backdrop-blur-md {
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+            }
+        }
     </style>
 </head>
 <body>
     <div id="container">
         <canvas id="logoCanvas"></canvas>
         <div id="twitchLink" class="hidden"></div>
-        <div id="howToPlay" class="hidden">
-            <h2>How to Play</h2>
-            <p>Press 'F11' to go full screen for a better experience</p>
-            <p>↑/↓: Change Speed</p>
-            <p>←/→: Flip Image</p>
-            <p>Numpad 5: Play Sound</p>
-            <p>Click/Tap: Toggle Link</p>
-            <p>H/Spacebar: Toggle This Menu</p>
-            <p>B: Go to Battle Royale</p>
-            <p>F: Go to Pixel Fighter</p>
-            <p>X: Go to @NothingJioo</p>
-            <p>T: Go to Nothing Forest</p>
-            <br>
-            <h2>Credits</h2>
-            <p>All assets are copyrighted by <a href="https://x.com/NothingJioo" target="_blank">@NothingJioo</a></p>
-            <p><a href="https://www.twitch.tv/jiooooooooooooooooooooooo" target="_blank">twitch.tv/jiooooooooooooooooooooooo</a></p>
-            <br>
-            <p>Created by Riko Prushka</p>
-            <p>2024</p>
-        </div>
+        <div id="howToPlay" class="hidden"></div>
         <div id="mobileControls">
             <button class="mobileButton" id="speedUpBtn">Speed Up</button>
             <button class="mobileButton" id="slowDownBtn">Slow Down</button>
@@ -128,6 +106,46 @@
             <button class="mobileButton" id="pixelFighterBtn">Pixel Fighter</button>
         </div>
     </div>
+    <div id="howToPlayPopup"></div>
+
+    <script type="text/babel">
+        const HowToPlayPopup = () => {
+            const [isVisible, setIsVisible] = React.useState(true);
+
+            React.useEffect(() => {
+                const timer = setTimeout(() => {
+                    setIsVisible(false);
+                }, 10000);
+
+                return () => clearTimeout(timer);
+            }, []);
+
+            if (!isVisible) return null;
+
+            return (
+                <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30 p-4">
+                    <div className="bg-white bg-opacity-20 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white border-opacity-20 max-w-md w-full">
+                      <h2 className="text-xl font-bold mb-3 text-white text-center">How to Play</h2>
+                      <ul className="text-white text-xs space-y-1">
+                        <li>• F11: Full screen</li>
+                        <li>• ↑/↓: Change Speed</li>
+                        <li>• ←/→: Flip Image</li>
+                        <li>• Numpad 5: Play Sound</li>
+                        <li>• Click/Tap: Toggle Link</li>
+                        <li>• H/Space: Toggle This Menu</li>
+                        <li>• B: Battle Royale</li>
+                        <li>• F: Pixel Fighter</li>
+                        <li>• X: @NothingJioo</li>
+                        <li>• T: Nothing Forest</li>
+                      </ul>
+                    </div>
+                  </div>
+            );
+        };
+
+        ReactDOM.render(<HowToPlayPopup />, document.getElementById('howToPlayPopup'));
+    </script>
+
     <script>
         const container = document.getElementById('container');
         const canvas = document.getElementById('logoCanvas');
