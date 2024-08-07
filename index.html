@@ -35,7 +35,7 @@
             max-width: 100%;
             max-height: 100%;
         }
-        #twitchLink, #howToPlay {
+        #twitchLink {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
@@ -49,11 +49,10 @@
             line-height: 1.5;
             max-width: 90%;
             overflow-y: auto;
+            bottom: 20px;
         }
-        #twitchLink { bottom: 20px; }
-        #howToPlay { top: 20px; max-height: 80%; }
-        #twitchLink a, #howToPlay a { color: #9146FF; text-decoration: none; }
-        #twitchLink a:hover, #howToPlay a:hover { text-decoration: underline; }
+        #twitchLink a { color: #9146FF; text-decoration: none; }
+        #twitchLink a:hover { text-decoration: underline; }
         .hidden { opacity: 0; pointer-events: none; }
         .link-clicked { color: #ff00ea; text-decoration: none; font-weight: bold; }
         #mobileControls {
@@ -80,7 +79,6 @@
         }
         @media (max-width: 768px) {
             #mobileControls { display: flex; }
-            #howToPlay { font-size: 10px; }
             .mobileButton { font-size: 14px; }
         }
         @layer utilities {
@@ -95,7 +93,6 @@
     <div id="container">
         <canvas id="logoCanvas"></canvas>
         <div id="twitchLink" class="hidden"></div>
-        <div id="howToPlay" class="hidden"></div>
         <div id="mobileControls">
             <button class="mobileButton" id="speedUpBtn">Speed Up</button>
             <button class="mobileButton" id="slowDownBtn">Slow Down</button>
@@ -117,29 +114,51 @@
                     setIsVisible(false);
                 }, 10000);
 
-                return () => clearTimeout(timer);
+                const handleKeyPress = (event) => {
+                    if (event.key === 'h' || event.key === 'H' || event.key === ' ') {
+                        setIsVisible(prev => !prev);
+                    }
+                };
+
+                document.addEventListener('keydown', handleKeyPress);
+
+                return () => {
+                    clearTimeout(timer);
+                    document.removeEventListener('keydown', handleKeyPress);
+                };
             }, []);
 
             if (!isVisible) return null;
 
+            const handleClose = () => {
+                setIsVisible(false);
+            };
+
             return (
-                <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30 p-4">
-                    <div className="bg-white bg-opacity-20 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white border-opacity-20 max-w-md w-full">
-                      <h2 className="text-xl font-bold mb-3 text-white text-center">How to Play</h2>
-                      <ul className="text-white text-xs space-y-1">
-                        <li>• F11: Full screen</li>
-                        <li>• ↑/↓: Change Speed</li>
-                        <li>• ←/→: Flip Image</li>
-                        <li>• Numpad 5: Play Sound</li>
-                        <li>• Click/Tap: Toggle Link</li>
-                        <li>• H/Space: Toggle This Menu</li>
-                        <li>• B: Battle Royale</li>
-                        <li>• F: Pixel Fighter</li>
-                        <li>• X: @NothingJioo</li>
-                        <li>• T: Nothing Forest</li>
-                      </ul>
+                <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30 p-4" onClick={handleClose}>
+                    <div className="bg-white bg-opacity-20 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white border-opacity-20 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+                        <h2 className="text-xl font-bold mb-3 text-white text-center">How to Play</h2>
+                        <ul className="text-white text-xs space-y-1">
+                            <li>• F11: Full screen</li>
+                            <li>• ↑/↓: Change Speed</li>
+                            <li>• ←/→: Flip Image</li>
+                            <li>• Numpad 5: Play Sound</li>
+                            <li>• Click/Tap: Toggle Link</li>
+                            <li>• H/Space: Toggle This Menu</li>
+                            <li> </li>
+                            <li>• B: Battle Royale</li>
+                            <li>• F: Pixel Fighter</li>
+                            <li>• X: @NothingJioo</li>
+                            <li>• T: Nothing Forest</li>
+                        </ul>
+                        <button 
+                            className="mt-4 px-4 py-2 bg-white bg-opacity-20 text-white rounded hover:bg-opacity-30 transition-colors"
+                            onClick={handleClose}
+                        >
+                            Close
+                        </button>
                     </div>
-                  </div>
+                </div>
             );
         };
 
@@ -151,9 +170,7 @@
         const canvas = document.getElementById('logoCanvas');
         const ctx = canvas.getContext('2d');
         const twitchLinkDisplay = document.getElementById('twitchLink');
-        const howToPlayDisplay = document.getElementById('howToPlay');
         let isLinkVisible = false;
-        let isHowToPlayVisible = false;
 
         const defaultWidth = 1280;
         const defaultHeight = 720;
@@ -289,11 +306,6 @@
             twitchLinkDisplay.classList.toggle('hidden', !isLinkVisible);
         }
 
-        function toggleHowToPlay() {
-            isHowToPlayVisible = !isHowToPlayVisible;
-            howToPlayDisplay.classList.toggle('hidden', !isHowToPlayVisible);
-        }
-
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawLogo();
@@ -315,13 +327,6 @@
                     break;
                 case '5':
                     playSound();
-                    break;
-                case 'h':
-                case 'H':
-                case '้':
-                case '็':
-                case ' ':
-                    toggleHowToPlay();
                     break;
                 case 't':
                 case 'T':
@@ -347,6 +352,7 @@
                 case 'โ':
                     window.location.href = 'pixel-fighter.html';
                     break;
+                // Note: 'h', 'H', and spacebar cases are now handled in the React component
             }
         }
 
@@ -381,7 +387,10 @@
         document.getElementById('slowDownBtn').addEventListener('click', () => changeSpeed(-0.5));
         document.getElementById('flipBtn').addEventListener('click', flipLogo);
         document.getElementById('soundBtn').addEventListener('click', playSound);
-        document.getElementById('helpBtn').addEventListener('click', toggleHowToPlay);
+        document.getElementById('helpBtn').addEventListener('click', () => {
+            const event = new KeyboardEvent('keydown', {'key': 'h'});
+            document.dispatchEvent(event);
+        });
 
         // Touch events for canvas
         let touchStartX, touchStartY;
